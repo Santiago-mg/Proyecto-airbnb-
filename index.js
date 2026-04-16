@@ -1,5 +1,6 @@
 import express from 'express'
 import usuarioRoutes from './routes/usuarioRoutes.js'
+import { paginainicio } from './controllers/usuarioController.js'
 import db from './config/db.js'
 
 const app = express()
@@ -26,6 +27,7 @@ app.set('views', './views')
 app.use(express.static('public'))
 
 // Routing
+app.get('/template/inicio', paginainicio)
 app.use('/auth', usuarioRoutes)
 
 // Arrancar servidor

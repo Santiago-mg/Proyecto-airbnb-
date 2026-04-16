@@ -14,6 +14,9 @@ const formularioOlvidepassword = (req, res) => {
     pagina: 'Recupera tu acceso a Bienes Raices'
   })
 }
+const paginainicio = (req, res) => {
+  res.render('template/inicio', {})
+}
 const registrar = async(req, res) => {
   //validacion 
   await check('nombre', 'El nombre es obligatorio').notEmpty().run(req)
@@ -55,7 +58,7 @@ const registrar = async(req, res) => {
     token: generarId()
   })
   // Mostrar mensaje de éxito
-  res.render('templates/mensaje', {
+  res.render('templates/mansaje', {
     pagina: 'Cuenta creada correctamente',
     mensaje: 'Hemos enviado un email de confirmación, presiona en el enlace'
   })
@@ -65,5 +68,6 @@ export {
   formularioLogin,
   formularioRegistro,
   registrar,
-  formularioOlvidepassword
+  formularioOlvidepassword,
+  paginainicio
 }
