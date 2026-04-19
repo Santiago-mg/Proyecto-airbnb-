@@ -1,21 +1,57 @@
 # Proyecto Airbnb
+Es una aplicación web inspirada en Airbnb, consiste en un sistema fullstack contenerizado con arquitectura monorepo, compuesto por un frontend renderizado en servidor, un backend API REST y una base de datos relacional.
 
 Proyecto reorganizado en tres servicios:
 
 - `frontend/`: Express + Pug para renderizado de vistas y archivos estaticos.
 - `backend/`: Express API + Sequelize para autenticacion y logica de negocio.
 - `database/`: inicializacion de MySQL para Docker Compose.
+## Arquitectura del proyecto
+El proyecto está compuesto por los siguientes servicios:
 
+- Frontend: Aplicación cliente encargada de la interfaz de usuario.
+- Backend: API encargada de la lógica de negocio y comunicación con la base de datos.
+- Base de datos: Sistema de almacenamiento de información.
+
+Todos los servicios se comunican entre sí mediante Docker Compose.
 ## Estructura
 
 ```text
-Proyecto-airbnb/
-├── frontend/
-├── backend/
-├── database/
-├── docker-compose.yml
-├── .env
-└── README.md
+proyecto-airbnb/
+├── docker-compose.yml          # Orquestación de servicios
+├── .env.example                # Variables de entorno de ejemplo
+├── .gitignore
+├── README.md
+├── frontend/                   # App frontend (Express + Pug + Tailwind)
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   ├── .env.example
+│   ├── package.json
+│   └── src/
+│       ├── server.js
+│       ├── app.js
+│       ├── controllers/
+│       ├── middlewares/
+│       ├── routes/
+│       ├── public/css/
+│       └── views/
+├── backend/                    # App backend (API REST con Express + Sequelize)
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   ├── .env.example
+│   ├── package.json
+│   └── src/
+│       ├── server.js
+│       ├── app.js
+│       ├── config/
+│       ├── controllers/
+│       ├── helpers/
+│       ├── middlewares/
+│       ├── models/
+│       ├── routes/
+│       └── services/
+└── database/
+    └── init.sql                # Esquema inicial de la base de datos
 ```
 
 ## Levantar con Docker
