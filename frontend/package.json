@@ -1,0 +1,26 @@
+{
+  "name": "proyecto-airbnb-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "build:css": "postcss src/public/css/tailwind.css -o src/public/css/app.css",
+    "css:watch": "postcss src/public/css/tailwind.css -o src/public/css/app.css --watch"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "http-proxy-middleware": "^3.0.5",
+    "pug": "^3.0.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "nodemon": "^3.1.11",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "tailwindcss": "^3.4.19"
+  }
+}

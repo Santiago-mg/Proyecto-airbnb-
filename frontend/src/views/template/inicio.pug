@@ -1,0 +1,41 @@
+extends ../layout/index
+
+block contenido
+  .min-h-screen.flex.items-center.justify-center.bg-slate-100.px-6.py-12
+    .w-full.max-w-5xl.overflow-hidden.rounded-3xl.bg-white.shadow-2xl
+      include ../partials/alert
+      div(class="grid grid-cols-1 md:grid-cols-2")
+        div(class="relative bg-slate-900 p-10 md:p-14 text-white")
+          .relative.z-10
+            p(class="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-indigo-300") Plataforma premium
+            h1(class="mb-6 text-4xl md:text-5xl font-black leading-tight")
+              | Bienes
+              span.text-indigo-400 Raices
+            p.mb-8.text-lg.leading-relaxed.text-slate-300
+              | Encuentra propiedades verificadas, conecta con nuevas oportunidades y accede a una experiencia moderna y segura.
+
+            .flex.flex-wrap.gap-3
+              span.rounded-full.bg-slate-800.px-4.py-2.text-sm Verificadas
+              span.rounded-full.bg-slate-800.px-4.py-2.text-sm Acceso rapido
+              span.rounded-full.bg-slate-800.px-4.py-2.text-sm Seguro
+
+        div(class="flex flex-col justify-center p-10 md:p-14")
+          .mb-8
+            h2.mb-3.text-3xl.font-extrabold.text-slate-900 Bienvenido
+            p.leading-relaxed.text-slate-600
+              | Inicia sesion para continuar o crea una cuenta nueva para comenzar tu busqueda.
+
+          .space-y-4
+            a(
+              class="block w-full rounded-2xl bg-indigo-600 px-6 py-4 text-center font-bold text-white shadow-lg transition duration-300 hover:-translate-y-1 hover:bg-indigo-700 hover:shadow-xl"
+              href='/login'
+            ) Iniciar sesion
+            a(
+              class="block w-full rounded-2xl border-2 border-slate-300 bg-white px-6 py-4 text-center font-bold text-slate-800 transition duration-300 hover:-translate-y-1 hover:border-indigo-500 hover:text-indigo-600 hover:shadow-lg"
+              href='/registro'
+            ) Crear cuenta
+
+          .mt-8.border-t.border-slate-200.pt-6
+            p.text-sm.text-slate-500
+              | Necesitas ayuda?
+              a(class="ml-1 font-semibold text-indigo-600 hover:text-indigo-700" href='/olvide-password') Contacta aqui

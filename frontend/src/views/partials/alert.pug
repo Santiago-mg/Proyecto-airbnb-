@@ -1,0 +1,4 @@
+if alert
+  - const alertClass = alert.type === 'error' ? 'bg-red-600 text-white' : alert.type === 'success' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-white'
+  .mb-6.rounded-xl.px-4.py-3.shadow(class=alertClass)
+    p.text-sm.font-bold= alert.message
