@@ -1,0 +1,237 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Airbnb API",
+    "version": "1.0.0",
+    "description": "API del proyecto semestral - Airbnb Clone"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
+  "tags": [
+    { "name": "Usuarios" },
+    { "name": "Propiedades" },
+    { "name": "Reservas" }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["Usuarios"],
+        "summary": "Obtener todos los usuarios",
+        "responses": {
+          "200": {
+            "description": "Lista de usuarios"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Usuarios"],
+        "summary": "Crear usuario",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/User" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario creado"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["Usuarios"],
+        "summary": "Obtener usuario por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Usuario encontrado" },
+          "404": { "description": "Usuario no encontrado" }
+        }
+      },
+      "put": {
+        "tags": ["Usuarios"],
+        "summary": "Actualizar usuario",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/User" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Usuario actualizado" }
+        }
+      },
+      "delete": {
+        "tags": ["Usuarios"],
+        "summary": "Eliminar usuario",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Usuario eliminado" }
+        }
+      }
+    },
+
+    "/properties": {
+      "get": {
+        "tags": ["Propiedades"],
+        "summary": "Listar propiedades",
+        "responses": {
+          "200": { "description": "Lista de propiedades" }
+        }
+      },
+      "post": {
+        "tags": ["Propiedades"],
+        "summary": "Crear propiedad",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Property" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Propiedad creada" }
+        }
+      }
+    },
+
+    "/properties/{id}": {
+      "get": {
+        "tags": ["Propiedades"],
+        "summary": "Obtener propiedad",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Propiedad encontrada" }
+        }
+      },
+      "put": {
+        "tags": ["Propiedades"],
+        "summary": "Actualizar propiedad",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Property" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Propiedad actualizada" }
+        }
+      },
+      "delete": {
+        "tags": ["Propiedades"],
+        "summary": "Eliminar propiedad",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Propiedad eliminada" }
+        }
+      }
+    },
+
+    "/reservations": {
+      "get": {
+        "tags": ["Reservas"],
+        "summary": "Listar reservas",
+        "responses": {
+          "200": { "description": "Lista de reservas" }
+        }
+      },
+      "post": {
+        "tags": ["Reservas"],
+        "summary": "Crear reserva",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Reservation" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Reserva creada" }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        }
+      },
+      "Property": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "price": { "type": "number" },
+          "location": { "type": "string" }
+        }
+      },
+      "Reservation": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "integer" },
+          "propertyId": { "type": "integer" },
+          "startDate": { "type": "string", "format": "date" },
+          "endDate": { "type": "string", "format": "date" }
+        }
+      }
+    }
+  }
+}
