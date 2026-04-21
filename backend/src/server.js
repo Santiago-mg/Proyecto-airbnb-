@@ -10,13 +10,11 @@ import './models/Usuario.js';
 const port = Number(process.env.PORT) || 4000;
 
 const ensureDatabaseExists = async () => {
-  const databaseHost = process.env.DB_HOST || process.env.BD_HOST || 'localhost';
-  const databasePort = Number(process.env.DB_PORT || process.env.BD_PORT || 3306);
-  const databaseUser = process.env.DB_USER || process.env.BD_USER || 'airbnb_user';
-  const databasePassword =
-    process.env.DB_PASSWORD || process.env.BD_PASS || 'airbnb_password';
-  const databaseName =
-    process.env.DB_NAME || process.env.BD_NOMBRE || 'proyecto_airbnb';
+  const databaseHost = process.env.DB_HOST || 'localhost';
+  const databasePort = Number(process.env.DB_PORT || 3307);
+  const databaseUser = process.env.DB_USER || 'root';
+  const databasePassword = process.env.DB_PASSWORD || 'root';
+  const databaseName = process.env.DB_NAME || 'bienes_raices_node_mvc';
 
   const connection = await mysql.createConnection({
     host: databaseHost,

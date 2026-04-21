@@ -1,8 +1,8 @@
-CREATE DATABASE IF NOT EXISTS proyecto_airbnb
+CREATE DATABASE IF NOT EXISTS bienes_raices_node_mvc
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
-USE proyecto_airbnb;
+USE bienes_raices_node_mvc;
 
 CREATE TABLE IF NOT EXISTS usuarios (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
