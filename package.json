@@ -5,8 +5,8 @@
   "keywords": [
     "MVC",
     "Pug",
-    "Tailwing",
-    "MySql",
+    "Tailwind",
+    "MySQL",
     "Sequelize"
   ],
   "license": "ISC",
@@ -16,10 +16,10 @@
   "scripts": {
     "start": "node index.js",
     "server": "nodemon index.js",
-    "css": "postcss public/css/tailwind.css -o public/css/app.css --watch"
+    "css": "postcss public/css/tailwind.css -o public/css/app.css --watch",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "2": "^3.0.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.23",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.11",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",

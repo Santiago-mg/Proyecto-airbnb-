@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airbnb-deployment
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: airbnb
+
+  template:
+    metadata:
+      labels:
+        app: airbnb
+
+    spec:
+      containers:
+      - name: airbnb
+
+        image: proyecto-airbnb
+
+        imagePullPolicy: Never
+
+        ports:
+        - containerPort: 3000
