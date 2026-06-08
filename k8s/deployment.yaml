@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: airbnb-deployment
 
@@ -19,7 +20,7 @@ spec:
       containers:
       - name: airbnb
 
-        image: proyecto-airbnb
+        image: proyecto-airbnb:v1
 
         imagePullPolicy: Never
 
