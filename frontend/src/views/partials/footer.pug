@@ -1,0 +1,32 @@
+footer.mt-20.border-t.border-brand-100.bg-brand-900.text-brand-100
+  .container-app.grid.gap-10.py-14(class="md:grid-cols-4")
+    div
+      a.flex.items-center.gap-2.font-display.text-2xl.font-bold.text-white(href="/")
+        span.flex.h-9.w-9.items-center.justify-center.rounded-xl.bg-coral-500.text-white
+          i(data-lucide="tent" style="width:20px;height:20px")
+        | EstadiaPro
+      p.mt-4.max-w-xs.text-sm.leading-relaxed.text-brand-200
+        | La plataforma para descubrir y reservar estadías únicas. Espacios verificados, anfitriones de confianza.
+    div
+      h4.text-sm.font-bold.uppercase.tracking-wide.text-white Explora
+      ul.mt-4.space-y-2.text-sm.text-brand-200
+        li: a.transition.hover_text-white(class="hover:text-white" href="/") Propiedades
+        li: a.transition.hover_text-white(class="hover:text-white" href="/?destacada=1") Destacadas
+        li: a.transition.hover_text-white(class="hover:text-white" href="/?orden=populares") Más populares
+    div
+      h4.text-sm.font-bold.uppercase.tracking-wide.text-white Anfitriones
+      ul.mt-4.space-y-2.text-sm.text-brand-200
+        li: a.transition.hover_text-white(class="hover:text-white" href="/registro?rol=anfitrion") Publica tu espacio
+        li: a.transition.hover_text-white(class="hover:text-white" href="/panel/propiedades") Gestiona propiedades
+    div
+      h4.text-sm.font-bold.uppercase.tracking-wide.text-white Soporte
+      ul.mt-4.space-y-2.text-sm.text-brand-200
+        li: a.transition.hover_text-white(class="hover:text-white" href="/olvide-password") Recuperar cuenta
+        li: a.transition.hover_text-white(class="hover:text-white" href="#") Centro de ayuda
+  .border-t.border-brand-800
+    .container-app.flex.flex-col.items-center.justify-between.gap-3.py-6.text-xs.text-brand-300(class="sm:flex-row")
+      p © #{anioActual} EstadiaPro. Proyecto académico full‑stack.
+      p.flex.items-center.gap-4
+        span Privacidad
+        span Términos
+        span Cookies

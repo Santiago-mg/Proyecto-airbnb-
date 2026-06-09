@@ -1,0 +1,87 @@
+﻿extends _layout
+include ../partials/alert
+
+block panel
+  -
+    var p = propiedad || {};
+    var serviciosTodos = ['Wi-Fi','Cocina','Parqueadero','Aire acondicionado','TV','Lavadora','Piscina','Jacuzzi','Mascotas','Desayuno'];
+    var serviciosSel = p.servicios || [];
+  a.mb-4.inline-flex.items-center.gap-1.text-sm.font-semibold.text-brand-700(href="/panel/propiedades")
+    i(data-lucide="arrow-left" style="width:16px;height:16px")
+    | Volver a mis propiedades
+  h1.font-display.text-3xl.font-bold.text-ink= propiedad ? 'Editar propiedad' : 'Publicar nueva propiedad'
+  p.mt-1.text-ink-muted Completa la información de tu espacio.
+
+  if errores
+    .mt-6
+      +errores(errores)
+
+  form.mt-6.space-y-6(method="POST" action=accion)
+    .card.space-y-4.p-6
+      h2.font-display.text-lg.font-bold.text-ink Información principal
+      div
+        label.label(for="titulo") Título
+        input#titulo.field(type="text" name="titulo" value=(p.titulo || '') placeholder="Apartamento moderno con vista..." required)
+      div
+        label.label(for="descripcion") Descripción
+        textarea#descripcion.field(name="descripcion" rows="4" placeholder="Describe tu espacio, sus comodidades y el entorno..." required)= p.descripcion || ''
+      .grid.gap-4(class="sm:grid-cols-2")
+        div
+          label.label(for="categoriaId") Categoría
+          select#categoriaId.field(name="categoriaId")
+            option(value="") Selecciona...
+            each c in categorias
+              option(value=c.id selected=(String(p.categoriaId) === String(c.id)))= c.nombre
+        div
+          label.label(for="precioNoche") Precio por noche (COP)
+          input#precioNoche.field(type="number" name="precioNoche" min="1" value=(p.precioNoche || '') placeholder="250000" required)
+
+    .card.space-y-4.p-6
+      h2.font-display.text-lg.font-bold.text-ink Ubicación
+      .grid.gap-4(class="sm:grid-cols-2")
+        div
+          label.label(for="ciudad") Ciudad
+          input#ciudad.field(type="text" name="ciudad" value=(p.ciudad || '') placeholder="Medellín" required)
+        div
+          label.label(for="pais") País
+          input#pais.field(type="text" name="pais" value=(p.pais || 'Colombia'))
+      div
+        label.label(for="direccion") Dirección (privada)
+        input#direccion.field(type="text" name="direccion" value=(p.direccion || '') placeholder="Calle 10 # 20-30")
+
+    .card.space-y-4.p-6
+      h2.font-display.text-lg.font-bold.text-ink Capacidad
+      .grid.gap-4(class="grid-cols-2 sm:grid-cols-4")
+        div
+          label.label(for="huespedes") Huéspedes
+          input#huespedes.field(type="number" name="huespedes" min="1" value=(p.huespedes || 1))
+        div
+          label.label(for="habitaciones") Habitaciones
+          input#habitaciones.field(type="number" name="habitaciones" min="0" value=(p.habitaciones || 1))
+        div
+          label.label(for="camas") Camas
+          input#camas.field(type="number" name="camas" min="0" value=(p.camas || 1))
+        div
+          label.label(for="banos") Baños
+          input#banos.field(type="number" name="banos" min="0" value=(p.banos || 1))
+
+    .card.space-y-4.p-6
+      h2.font-display.text-lg.font-bold.text-ink Servicios
+      .grid.gap-3(class="sm:grid-cols-3")
+        each s in serviciosTodos
+          label.flex.cursor-pointer.items-center.gap-2.rounded-2xl.border.border-slate-200.px-4.py-2.text-sm.transition(class="has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50")
+            input.h-4.w-4.rounded.border-slate-300(type="checkbox" name="servicios" value=s checked=(serviciosSel.indexOf(s) !== -1))
+            span.font-medium.text-ink-soft= s
+
+    .card.space-y-4.p-6
+      h2.font-display.text-lg.font-bold.text-ink Fotos
+      div
+        label.label(for="imagenes") URLs de imágenes (una por línea)
+        textarea#imagenes.field.font-mono.text-xs(name="imagenes" rows="4" placeholder="https://images.unsplash.com/...\nhttps://images.unsplash.com/...")= (typeof p.imagenes === 'string' ? p.imagenes : '')
+        p.mt-1.text-xs.text-ink-muted Pega enlaces directos a imágenes. La primera será la portada.
+
+    .flex.gap-3
+      button.btn-primary(type="submit")
+        i(data-lucide="check" style="width:18px;height:18px")
+        = propiedad ? 'Guardar cambios' : 'Publicar propiedad'
+      a.btn-ghost(href="/panel/propiedades") Cancelar

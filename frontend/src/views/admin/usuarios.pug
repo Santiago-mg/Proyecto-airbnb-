@@ -1,0 +1,53 @@
+﻿extends _layout
+include ../partials/mixins
+
+block panel
+  form.mb-6.flex.flex-wrap.gap-3(action="/admin/usuarios" method="GET")
+    .relative.flex-1(class="min-w-[220px]")
+      i.absolute.left-4.top-1_2.-translate-y-1_2.text-ink-muted(class="top-1/2 -translate-y-1/2" data-lucide="search" style="width:18px;height:18px")
+      input.field.pl-11(type="text" name="q" placeholder="Buscar por nombre o email" value=(filtros.q || ''))
+    select.field.w-auto(name="rol")
+      option(value="") Todos los roles
+      each r in ['viajero','anfitrion','admin']
+        option(value=r selected=(filtros.rol === r))= r
+    button.btn-dark(type="submit") Filtrar
+
+  .card.overflow-hidden
+    .overflow-x-auto
+      table.w-full.text-left.text-sm
+        thead.bg-slate-50.text-xs.font-bold.uppercase.tracking-wide.text-ink-muted
+          tr
+            th.px-5.py-3 Usuario
+            th.px-5.py-3 Rol
+            th.px-5.py-3 Estado
+            th.px-5.py-3 Registro
+            th.px-5.py-3.text-right Acciones
+        tbody.divide-y.divide-slate-100
+          each u in usuarios
+            tr(class="hover:bg-slate-50")
+              td.px-5.py-3
+                .flex.items-center.gap-3
+                  +avatar(u, 38)
+                  div
+                    p.font-semibold.text-ink= u.nombre
+                    p.text-xs.text-ink-muted= u.email
+              td.px-5.py-3
+                form.inline(data-admin-form data-api=`/admin/usuarios/${u.id}` data-method="PATCH")
+                  select.field.w-auto.py-2.text-xs(name="rol" data-autosubmit)
+                    each r in ['viajero','anfitrion','admin']
+                      option(value=r selected=(u.rol === r))= r
+              td.px-5.py-3
+                if u.activo
+                  span.badge.badge-success Activo
+                else
+                  span.badge.badge-danger Suspendido
+                if u.verificado
+                  span.ml-1.badge.badge-info Verificado
+              td.px-5.py-3.text-ink-muted= helpers.formatearFecha(u.createdAt)
+              td.px-5.py-3
+                .flex.items-center.justify-end.gap-2
+                  button.btn-soft.py-2.text-xs(data-admin-action data-api=`/admin/usuarios/${u.id}` data-method="PATCH" data-payload=JSON.stringify({ verificado: !u.verificado }))= u.verificado ? 'Quitar verif.' : 'Verificar'
+                  if u.activo
+                    button.btn-ghost.py-2.text-xs.text-rose-600(class="hover:border-rose-300" data-admin-action data-api=`/admin/usuarios/${u.id}` data-method="PATCH" data-payload=JSON.stringify({ activo: false })) Suspender
+                  else
+                    button.btn-ghost.py-2.text-xs.text-emerald-600(class="hover:border-emerald-300" data-admin-action data-api=`/admin/usuarios/${u.id}` data-method="PATCH" data-payload=JSON.stringify({ activo: true })) Reactivar

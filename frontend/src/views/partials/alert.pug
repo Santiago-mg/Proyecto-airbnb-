@@ -1,0 +1,22 @@
+﻿mixin alert(data)
+  if data
+    -
+      var estilos = {
+        success: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+        error: 'bg-rose-50 text-rose-800 border-rose-200',
+        info: 'bg-brand-50 text-brand-800 border-brand-200',
+        warning: 'bg-amber-50 text-amber-800 border-amber-200'
+      };
+      var iconos = { success: 'check-circle', error: 'alert-circle', info: 'info', warning: 'alert-triangle' };
+      var tipo = data.tipo || 'info';
+    .flex.items-center.gap-3.rounded-2xl.border.px-4.py-3.text-sm.font-medium.animate-fade-up(class=estilos[tipo] role="status")
+      i(data-lucide=iconos[tipo] style="width:18px;height:18px")
+      span= data.mensaje
+
+mixin errores(lista)
+  if lista && lista.length
+    .space-y-2
+      each error in lista
+        .flex.items-center.gap-2.rounded-2xl.border.border-rose-200.bg-rose-50.px-4.py-2.text-sm.font-medium.text-rose-700
+          i(data-lucide="alert-circle" style="width:16px;height:16px")
+          span= error.msg

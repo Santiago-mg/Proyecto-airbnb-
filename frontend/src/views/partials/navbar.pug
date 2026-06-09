@@ -1,0 +1,51 @@
+﻿include mixins
+
+header.sticky.top-0.z-40.border-b.border-brand-100.bg-white_85.backdrop-blur(class="bg-white/85")
+  .container-app.flex.h-18.items-center.justify-between.gap-4(style="height:4.5rem")
+    a.flex.items-center.gap-2.font-display.text-2xl.font-bold.text-brand-900(href="/")
+      span.flex.h-9.w-9.items-center.justify-center.rounded-xl.bg-brand-900.text-white
+        i(data-lucide="tent" style="width:20px;height:20px")
+      | Estadia
+      span.text-coral-500 Pro
+
+    nav.hidden.items-center.gap-7.text-sm.font-semibold.text-ink-soft(class="md:flex")
+      a.link-underline(href="/") Explorar
+      a.link-underline(href="/?orden=populares") Populares
+      a.link-underline(href="/?destacada=1") Destacadas
+      if usuario && (usuario.rol === 'anfitrion' || usuario.rol === 'admin')
+        a.link-underline(href="/panel/propiedades") Mis propiedades
+      else
+        a.link-underline(href="/registro?rol=anfitrion") Conviértete en anfitrión
+
+    .flex.items-center.gap-3
+      if usuario
+        .relative(data-menu)
+          button.flex.items-center.gap-2.rounded-full.border.border-brand-100.bg-white.py-2.pl-3.pr-2.shadow-soft.transition.hover_shadow-card(type="button" data-menu-trigger)
+            i(data-lucide="menu" style="width:18px;height:18px")
+            +avatar(usuario, 32)
+          .absolute.right-0.mt-2.w-60.origin-top-right.rounded-3xl.border.border-brand-100.bg-white.p-2.shadow-float.hidden(data-menu-panel)
+            .px-3.py-2
+              p.text-sm.font-bold.text-ink= usuario.nombre
+              p.truncate.text-xs.text-ink-muted= usuario.email
+              span.mt-1.badge.badge-info= usuario.rol
+            .my-1.border-t.border-slate-100
+            a.flex.items-center.gap-2.rounded-2xl.px-3.py-2.text-sm.font-medium.text-ink-soft.transition.hover_bg-brand-50(class="hover:bg-brand-50" href="/panel")
+              i(data-lucide="layout-dashboard" style="width:16px;height:16px")
+              | Mi panel
+            a.flex.items-center.gap-2.rounded-2xl.px-3.py-2.text-sm.font-medium.text-ink-soft.transition(class="hover:bg-brand-50" href="/panel/reservas")
+              i(data-lucide="calendar-check" style="width:16px;height:16px")
+              | Mis reservas
+            a.flex.items-center.gap-2.rounded-2xl.px-3.py-2.text-sm.font-medium.text-ink-soft.transition(class="hover:bg-brand-50" href="/panel/favoritos")
+              i(data-lucide="heart" style="width:16px;height:16px")
+              | Favoritos
+            if usuario.rol === 'admin'
+              a.flex.items-center.gap-2.rounded-2xl.px-3.py-2.text-sm.font-semibold.text-brand-700.transition(class="hover:bg-brand-50" href="/admin")
+                i(data-lucide="shield-check" style="width:16px;height:16px")
+                | Panel admin
+            .my-1.border-t.border-slate-100
+            a.flex.items-center.gap-2.rounded-2xl.px-3.py-2.text-sm.font-medium.text-rose-600.transition(class="hover:bg-rose-50" href="/logout")
+              i(data-lucide="log-out" style="width:16px;height:16px")
+              | Cerrar sesión
+      else
+        a.hidden.text-sm.font-semibold.text-ink-soft.transition.hover_text-brand-700(class="sm:block hover:text-brand-700" href="/login") Iniciar sesión
+        a.btn-primary(href="/registro") Crear cuenta

@@ -1,0 +1,25 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    meta(name="description" content="EstadiaPro · descubre y reserva estadías únicas, verificadas y de confianza.")
+    title= (pagina ? pagina + ' · ' : '') + 'EstadiaPro'
+    link(rel="stylesheet" href="/css/app.css")
+    link(rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏕️%3C/text%3E%3C/svg%3E")
+    script(src="https://unpkg.com/lucide@latest")
+    block head
+  body.flex.min-h-dvh.flex-col
+    include ../partials/navbar
+    if anuncio
+      -
+        var colores = { promo: 'bg-coral-500', success: 'bg-emerald-600', warning: 'bg-amber-500', info: 'bg-brand-700' };
+      .text-white(class=(colores[anuncio.tipo] || 'bg-brand-700'))
+        .container-app.flex.items-center.justify-center.gap-2.py-2.text-center.text-sm.font-semibold
+          i(data-lucide="megaphone" style="width:16px;height:16px")
+          span #{anuncio.titulo} — #{anuncio.mensaje}
+    main.flex-1
+      block contenido
+    include ../partials/footer
+    script(src="/js/main.js")
+    block scripts

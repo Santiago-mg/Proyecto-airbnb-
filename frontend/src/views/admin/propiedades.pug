@@ -1,0 +1,44 @@
+﻿extends _layout
+
+block panel
+  .mb-6.flex.flex-wrap.gap-2
+    -
+      var tabs = [{k:'',l:'Todas'},{k:'pendiente',l:'Pendientes'},{k:'aprobada',l:'Aprobadas'},{k:'rechazada',l:'Rechazadas'}];
+    each tab in tabs
+      a.chip(class=((filtros.estado||'') === tab.k ? 'ring-2 ring-brand-500' : '') href=`/admin/propiedades${tab.k ? '?estado='+tab.k : ''}`)= tab.l
+
+  if propiedades.length
+    .grid.gap-4(class="xl:grid-cols-2")
+      each p in propiedades
+        -
+          var estados = { aprobada: 'badge-success', pendiente: 'badge-warning', rechazada: 'badge-danger' };
+          var portada = (p.imagenes && p.imagenes.length) ? p.imagenes[0] : 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80';
+        .card.flex.gap-4.p-4
+          .h-28.w-36.shrink-0.overflow-hidden.rounded-2xl.bg-brand-100
+            img.h-full.w-full.object-cover(src=portada alt=p.titulo)
+          .min-w-0.flex-1
+            .flex.items-start.justify-between.gap-2
+              div
+                h3.truncate.font-display.text-base.font-bold.text-ink= p.titulo
+                p.text-xs.text-ink-muted= `${p.ciudad} · ${p.anfitrion ? p.anfitrion.nombre : ''}`
+              span.badge(class=estados[p.estado])= p.estado
+            p.mt-1.font-display.font-bold.text-ink= helpers.formatearPrecio(p.precioNoche)
+            .mt-3.flex.flex-wrap.gap-2
+              if p.estado !== 'aprobada'
+                button.btn-soft.py-2.text-xs.text-emerald-700(data-admin-action data-api=`/admin/propiedades/${p.id}` data-method="PATCH" data-payload=JSON.stringify({ accion: 'aprobar' }))
+                  i(data-lucide="check" style="width:14px;height:14px")
+                  | Aprobar
+              if p.estado !== 'rechazada'
+                button.btn-ghost.py-2.text-xs.text-rose-600(class="hover:border-rose-300" data-admin-action data-api=`/admin/propiedades/${p.id}` data-method="PATCH" data-payload=JSON.stringify({ accion: 'rechazar' }))
+                  i(data-lucide="x" style="width:14px;height:14px")
+                  | Rechazar
+              button.btn-ghost.py-2.text-xs(class=(p.destacada ? 'border-amber-300 text-amber-600' : '') data-admin-action data-api=`/admin/propiedades/${p.id}` data-method="PATCH" data-payload=JSON.stringify({ accion: 'destacar' }))
+                i(data-lucide="sparkles" style="width:14px;height:14px")
+                = p.destacada ? 'Quitar destaque' : 'Destacar'
+              a.btn-ghost.py-2.text-xs(href=`/propiedades/${p.id}` target="_blank")
+                i(data-lucide="external-link" style="width:14px;height:14px")
+                | Ver
+  else
+    .card.flex.flex-col.items-center.gap-3.p-12.text-center
+      i(data-lucide="building" class="text-brand-400" style="width:44px;height:44px")
+      p.text-ink-muted No hay propiedades en este estado.

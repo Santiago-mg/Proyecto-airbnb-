@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-brand-50 text-ink font-sans antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-600 ring-offset-2 ring-offset-white;
+  }
+}
+
+@layer components {
+  .container-app {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+  }
+
+  /* Botones */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer;
+  }
+  .btn-primary {
+    @apply btn bg-coral-500 text-white shadow-soft hover:-translate-y-0.5 hover:bg-coral-600 hover:shadow-card;
+  }
+  .btn-dark {
+    @apply btn bg-brand-900 text-white hover:-translate-y-0.5 hover:bg-brand-800;
+  }
+  .btn-ghost {
+    @apply btn border border-brand-200 bg-white text-brand-800 hover:border-brand-400 hover:bg-brand-50;
+  }
+  .btn-soft {
+    @apply btn bg-brand-100 text-brand-800 hover:bg-brand-200;
+  }
+
+  /* Inputs */
+  .field {
+    @apply w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-ink placeholder-slate-400 transition focus:border-brand-500 focus:ring-2 focus:ring-brand-200;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-semibold text-ink-soft;
+  }
+
+  /* Tarjetas */
+  .card {
+    @apply rounded-4xl border border-white/60 bg-white shadow-card;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-2 text-xs font-semibold text-ink-soft shadow-soft;
+  }
+
+  /* Insignias de estado */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide;
+  }
+  .badge-success { @apply bg-emerald-100 text-emerald-700; }
+  .badge-warning { @apply bg-amber-100 text-amber-700; }
+  .badge-danger { @apply bg-rose-100 text-rose-700; }
+  .badge-info { @apply bg-brand-100 text-brand-700; }
+  .badge-muted { @apply bg-slate-100 text-slate-600; }
+
+  /* Fondo aurora del hero */
+  .aurora-bg {
+    background:
+      radial-gradient(60% 80% at 15% 20%, rgba(20, 184, 166, 0.35), transparent 60%),
+      radial-gradient(50% 70% at 85% 15%, rgba(255, 90, 95, 0.28), transparent 60%),
+      radial-gradient(60% 90% at 70% 90%, rgba(15, 118, 110, 0.40), transparent 60%),
+      linear-gradient(135deg, #042F2E 0%, #0F766E 60%, #115E59 100%);
+  }
+
+  .link-underline {
+    @apply relative after:absolute after:-bottom-0.5 after:left-0 after:h-0.5 after:w-0 after:bg-brand-600 after:transition-all hover:after:w-full;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}

@@ -1,0 +1,60 @@
+extends ../layout/base
+include ../partials/alert
+
+block contenido
+  section.container-app.py-12
+    .mx-auto.grid.max-w-5xl.overflow-hidden.rounded-4xl.shadow-float(class="lg:grid-cols-2")
+      .relative.hidden.aurora-bg.p-12(class="lg:block")
+        .relative.z-10.flex.h-full.flex-col.justify-between.text-white
+          a.flex.items-center.gap-2.font-display.text-2xl.font-bold(href="/")
+            i(data-lucide="tent" style="width:24px;height:24px")
+            | EstadiaPro
+          div
+            h2.font-display.text-4xl.font-bold.leading-tight Únete y empieza a explorar el mundo.
+            p.mt-4.text-brand-100(class="text-white/90") Crea tu cuenta para reservar estadías o publicar tu propio espacio.
+          ul.space-y-3.text-sm
+            each t in ['Reserva en segundos','Guarda tus favoritos','Conviértete en anfitrión']
+              li.flex.items-center.gap-2
+                i(data-lucide="check-circle" style="width:18px;height:18px")
+                = t
+
+      .bg-white.p-8(class="sm:p-12")
+        h1.font-display.text-3xl.font-bold.text-ink Crea tu cuenta
+        p.mt-2.text-sm.text-ink-muted ¿Ya tienes cuenta?
+          a.ml-1.font-semibold.text-brand-700.link-underline(href="/login") Inicia sesión
+
+        if errores
+          .mt-6
+            +errores(errores)
+
+        form.mt-6.space-y-4(method="POST" action="/registro" novalidate)
+          div
+            label.label(for="nombre") Nombre completo
+            input#nombre.field(type="text" name="nombre" placeholder="Tu nombre" value=(valores && valores.nombre) required)
+          div
+            label.label(for="email") Correo electrónico
+            input#email.field(type="email" name="email" placeholder="tucorreo@ejemplo.com" value=(valores && valores.email) required)
+          .grid.gap-4(class="sm:grid-cols-2")
+            div
+              label.label(for="password") Contraseña
+              input#password.field(type="password" name="password" placeholder="Mínimo 6 caracteres" required)
+            div
+              label.label(for="repetir_password") Repetir contraseña
+              input#repetir_password.field(type="password" name="repetir_password" placeholder="Repite la contraseña" required)
+          div
+            label.label ¿Cómo quieres usar EstadiaPro?
+            .grid.grid-cols-2.gap-3
+              label.cursor-pointer
+                input.peer.sr-only(type="radio" name="rol" value="viajero" checked=(!valores || valores.rol !== 'anfitrion'))
+                .rounded-2xl.border-2.border-slate-200.p-4.text-center.transition(class="peer-checked:border-brand-500 peer-checked:bg-brand-50")
+                  i(data-lucide="luggage" class="mx-auto text-brand-600" style="width:24px;height:24px")
+                  p.mt-2.text-sm.font-bold.text-ink Viajero
+                  p.text-xs.text-ink-muted Quiero reservar
+              label.cursor-pointer
+                input.peer.sr-only(type="radio" name="rol" value="anfitrion" checked=(valores && valores.rol === 'anfitrion'))
+                .rounded-2xl.border-2.border-slate-200.p-4.text-center.transition(class="peer-checked:border-brand-500 peer-checked:bg-brand-50")
+                  i(data-lucide="home" class="mx-auto text-brand-600" style="width:24px;height:24px")
+                  p.mt-2.text-sm.font-bold.text-ink Anfitrión
+                  p.text-xs.text-ink-muted Quiero publicar
+          button.btn-primary.w-full(type="submit") Crear cuenta
+          p.text-center.text-xs.text-ink-muted Al registrarte aceptas nuestros Términos y Política de Privacidad.

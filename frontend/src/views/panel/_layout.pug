@@ -1,0 +1,41 @@
+﻿extends ../layout/base
+include ../partials/mixins
+include ../partials/alert
+
+block contenido
+  section.container-app.py-10
+    .grid.gap-8(class="lg:grid-cols-[260px_1fr]")
+      //- Sidebar
+      aside.h-max.rounded-4xl.border.border-brand-100.bg-white.p-5.shadow-soft(class="lg:sticky lg:top-24")
+        .flex.items-center.gap-3.border-b.border-slate-100.pb-4
+          +avatar(usuario, 48)
+          div
+            p.font-display.font-bold.leading-tight.text-ink= usuario.nombre
+            span.badge.badge-info.mt-1= usuario.rol
+        nav.mt-4.space-y-1
+          -
+            var items = [
+              { href: '/panel', sec: 'inicio', icon: 'layout-dashboard', label: 'Resumen' },
+              { href: '/panel/reservas', sec: 'reservas', icon: 'calendar-check', label: 'Mis reservas' },
+              { href: '/panel/favoritos', sec: 'favoritos', icon: 'heart', label: 'Favoritos' },
+              { href: '/panel/perfil', sec: 'perfil', icon: 'user-cog', label: 'Mi perfil' }
+            ];
+            if (usuario.rol === 'anfitrion' || usuario.rol === 'admin') items.splice(3, 0, { href: '/panel/propiedades', sec: 'propiedades', icon: 'building-2', label: 'Mis propiedades' });
+          each it in items
+            a.flex.items-center.gap-3.rounded-2xl.px-4.py-2.text-sm.font-semibold.transition(href=it.href class=(seccion === it.sec ? 'bg-brand-900 text-white shadow-soft' : 'text-ink-soft hover:bg-brand-50'))
+              i(data-lucide=it.icon style="width:18px;height:18px")
+              = it.label
+          if usuario.rol === 'admin'
+            a.mt-1.flex.items-center.gap-3.rounded-2xl.px-4.py-2.text-sm.font-semibold.text-coral-600.transition(class="hover:bg-coral-50" href="/admin")
+              i(data-lucide="shield-check" style="width:18px;height:18px")
+              | Ir al panel admin
+          a.flex.items-center.gap-3.rounded-2xl.px-4.py-2.text-sm.font-semibold.text-rose-600.transition(class="hover:bg-rose-50" href="/logout")
+            i(data-lucide="log-out" style="width:18px;height:18px")
+            | Cerrar sesión
+
+      //- Contenido
+      .min-w-0
+        if alert
+          .mb-6
+            +alert(alert)
+        block panel

@@ -1,0 +1,43 @@
+extends _layout
+include ../partials/mixins
+
+block panel
+  h1.font-display.text-3xl.font-bold.text-ink Mi perfil
+  p.mt-1.text-ink-muted Actualiza tu información personal.
+
+  .mt-6.grid.gap-6(class="lg:grid-cols-[1fr_1.6fr]")
+    .card.h-max.p-6.text-center
+      .mx-auto.w-max
+        +avatar(usuario, 96)
+      h2.mt-4.font-display.text-xl.font-bold.text-ink= usuario.nombre
+      p.text-sm.text-ink-muted= usuario.email
+      span.mt-2.inline-block.badge.badge-info= usuario.rol
+      if usuario.verificado
+        p.mt-3.flex.items-center.justify-center.gap-1.text-sm.font-semibold.text-emerald-600
+          i(data-lucide="badge-check" style="width:16px;height:16px")
+          | Cuenta verificada
+
+    form.card.space-y-4.p-6(method="POST" action="/panel/perfil")
+      .grid.gap-4(class="sm:grid-cols-2")
+        div
+          label.label(for="nombre") Nombre completo
+          input#nombre.field(type="text" name="nombre" value=usuario.nombre required)
+        div
+          label.label(for="telefono") Teléfono
+          input#telefono.field(type="text" name="telefono" value=(usuario.telefono || '') placeholder="+57 300 000 0000")
+      div
+        label.label(for="avatar") URL de foto de perfil
+        input#avatar.field(type="url" name="avatar" value=(usuario.avatar || '') placeholder="https://...")
+      div
+        label.label(for="bio") Sobre mí
+        textarea#bio.field(name="bio" rows="3" placeholder="Cuéntale al mundo sobre ti...")= usuario.bio || ''
+      div
+        label.label(for="password") Nueva contraseña (opcional)
+        input#password.field(type="password" name="password" placeholder="Déjalo vacío para no cambiarla")
+      if usuario.rol === 'viajero'
+        label.flex.items-center.gap-3.rounded-2xl.bg-brand-50.p-4
+          input.h-5.w-5.rounded.border-slate-300(type="checkbox" name="rol" value="anfitrion")
+          span.text-sm.font-medium.text-ink-soft Quiero convertirme en anfitrión y publicar propiedades.
+      button.btn-primary(type="submit")
+        i(data-lucide="save" style="width:18px;height:18px")
+        | Guardar cambios

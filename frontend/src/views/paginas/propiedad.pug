@@ -1,0 +1,168 @@
+﻿extends ../layout/base
+include ../partials/mixins
+include ../partials/alert
+
+block contenido
+  -
+    var imgs = (propiedad.imagenes && propiedad.imagenes.length) ? propiedad.imagenes : ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1280&q=80'];
+    var servicios = propiedad.servicios || [];
+    var iconoServicio = { 'Wi-Fi':'wifi', 'Cocina':'utensils', 'Parqueadero':'car', 'Aire acondicionado':'wind', 'TV':'tv', 'Lavadora':'washing-machine' };
+
+  section.container-app.pt-8
+    nav.mb-4.flex.items-center.gap-2.text-sm.text-ink-muted
+      a.transition(class="hover:text-brand-700" href="/") Inicio
+      i(data-lucide="chevron-right" style="width:14px;height:14px")
+      span.font-medium.text-ink-soft= propiedad.ciudad
+
+    .flex.flex-wrap.items-start.justify-between.gap-4
+      div
+        h1.font-display.text-3xl.font-bold.text-ink(class="lg:text-4xl")= propiedad.titulo
+        .mt-2.flex.flex-wrap.items-center.gap-x-4.gap-y-1.text-sm.text-ink-soft
+          if propiedad.rating
+            span.flex.items-center.gap-1.font-semibold.text-ink
+              i(data-lucide="star" class="fill-amber-400 text-amber-400" style="width:16px;height:16px")
+              = `${Number(propiedad.rating).toFixed(1)} · ${propiedad.totalResenas} reseñas`
+          span.flex.items-center.gap-1
+            i(data-lucide="map-pin" style="width:15px;height:15px")
+            = `${propiedad.ciudad}, ${propiedad.pais}`
+          if propiedad.categoria
+            span.badge.badge-info= propiedad.categoria.nombre
+      button.btn-ghost.js-fav(data-id=propiedad.id)
+        i(data-lucide="heart" class=(esFavorito ? "fill-coral-500 text-coral-500" : "") style="width:18px;height:18px")
+        | Guardar
+
+  //- GALERIA
+  section.container-app.mt-6
+    .grid.gap-3.overflow-hidden.rounded-4xl(class="md:grid-cols-2")
+      .relative.overflow-hidden(class="aspect-[4/3] md:aspect-auto")
+        img.h-full.w-full.object-cover(src=imgs[0] alt=propiedad.titulo)
+      .grid.grid-cols-2.gap-3
+        each src, i in imgs.slice(1,5)
+          .overflow-hidden.rounded-3xl(class="aspect-[4/3] md:rounded-none")
+            img.h-full.w-full.object-cover(src=src alt=`${propiedad.titulo} ${i+2}` loading="lazy")
+        if imgs.length < 3
+          each n in [imgs.length, imgs.length+1].slice(0, 3-imgs.length)
+            .rounded-3xl.bg-brand-100(class="aspect-[4/3]")
+
+  //- CUERPO
+  section.container-app.mt-10.grid.gap-10(class="lg:grid-cols-[1.7fr_1fr]")
+    //- Izquierda
+    .space-y-8
+      if alert
+        +alert(alert)
+      .card.flex.items-center.justify-between.gap-4.p-6
+        .flex.items-center.gap-4
+          +avatar(propiedad.anfitrion, 56)
+          div
+            p.text-xs.font-bold.uppercase.tracking-wide.text-brand-600 Anfitrión
+            p.font-display.text-lg.font-bold.text-ink= propiedad.anfitrion ? propiedad.anfitrion.nombre : 'Anfitrión'
+            if propiedad.anfitrion && propiedad.anfitrion.verificado
+              span.flex.items-center.gap-1.text-xs.font-semibold.text-emerald-600
+                i(data-lucide="badge-check" style="width:14px;height:14px")
+                | Identidad verificada
+        .hidden.gap-6.text-center(class="sm:flex")
+          div
+            p.font-display.text-2xl.font-bold.text-ink= propiedad.huespedes
+            p.text-xs.text-ink-muted Huéspedes
+          div
+            p.font-display.text-2xl.font-bold.text-ink= propiedad.habitaciones
+            p.text-xs.text-ink-muted Habitaciones
+          div
+            p.font-display.text-2xl.font-bold.text-ink= propiedad.banos
+            p.text-xs.text-ink-muted Baños
+
+      div
+        h2.font-display.text-2xl.font-bold.text-ink Sobre este espacio
+        p.mt-3.leading-relaxed.text-ink-soft= propiedad.descripcion
+
+      if servicios.length
+        div
+          h2.font-display.text-2xl.font-bold.text-ink Lo que ofrece
+          .mt-4.grid.gap-3(class="sm:grid-cols-2")
+            each s in servicios
+              .flex.items-center.gap-3.rounded-2xl.border.border-brand-100.bg-white.px-4.py-3
+                i(data-lucide=(iconoServicio[s] || 'check') class="text-brand-600" style="width:18px;height:18px")
+                span.text-sm.font-medium.text-ink-soft= s
+
+      //- Reseñas
+      div
+        .flex.items-center.justify-between
+          h2.font-display.text-2xl.font-bold.text-ink Reseñas
+          if propiedad.rating
+            span.flex.items-center.gap-1.text-sm.font-semibold
+              i(data-lucide="star" class="fill-amber-400 text-amber-400" style="width:16px;height:16px")
+              = `${Number(propiedad.rating).toFixed(1)} · ${propiedad.totalResenas}`
+        if propiedad.resenas && propiedad.resenas.length
+          .mt-4.grid.gap-4(class="sm:grid-cols-2")
+            each r in propiedad.resenas
+              .card.p-5
+                .flex.items-center.gap-3
+                  +avatar(r.autor, 40)
+                  div
+                    p.text-sm.font-bold.text-ink= r.autor ? r.autor.nombre : 'Huésped'
+                    +stars(r.calificacion, 13)
+                p.mt-3.text-sm.leading-relaxed.text-ink-soft= r.comentario
+        else
+          p.mt-4.rounded-2xl.bg-brand-50.p-6.text-center.text-sm.text-ink-muted Aún no hay reseñas. ¡Sé el primero en hospedarte!
+
+        //- Formulario de reseña (solo logueado)
+        if usuario
+          form.card.mt-6.space-y-4.p-6.js-resena(data-id=propiedad.id)
+            h3.font-display.text-lg.font-bold.text-ink Deja tu reseña
+            div
+              label.label Calificación
+              select.field(name="calificacion")
+                each n in [5,4,3,2,1]
+                  option(value=n)= `${n} estrella${n>1?'s':''}`
+            div
+              label.label Comentario
+              textarea.field(name="comentario" rows="3" placeholder="Cuéntanos tu experiencia...")
+            button.btn-dark(type="submit") Publicar reseña
+            p.text-xs.text-ink-muted(data-resena-msg)
+
+    //- Derecha: widget de reserva (sticky)
+    aside.relative
+      .sticky.top-24
+        .card.p-6.shadow-float
+          .flex.items-baseline.justify-between
+            p
+              span.font-display.text-3xl.font-bold.text-ink= helpers.formatearPrecio(propiedad.precioNoche)
+              span.text-sm.text-ink-muted  / noche
+            if propiedad.rating
+              span.flex.items-center.gap-1.text-sm.font-semibold
+                i(data-lucide="star" class="fill-amber-400 text-amber-400" style="width:15px;height:15px")
+                = Number(propiedad.rating).toFixed(1)
+
+          form.mt-5.space-y-3.js-reserva(data-id=propiedad.id data-precio=propiedad.precioNoche data-max=propiedad.huespedes)
+            .grid.grid-cols-2.gap-3
+              div
+                label.label.text-xs Llegada
+                input.field.py-2(type="date" name="fechaInicio" required)
+              div
+                label.label.text-xs Salida
+                input.field.py-2(type="date" name="fechaFin" required)
+            div
+              label.label.text-xs Huéspedes
+              input.field.py-2(type="number" name="huespedes" min="1" max=propiedad.huespedes value="1" required)
+
+            .space-y-2.rounded-2xl.bg-brand-50.p-4.text-sm.hidden(data-resumen)
+              .flex.justify-between.text-ink-soft
+                span(data-detalle-noches)
+                span(data-detalle-subtotal)
+              .flex.justify-between.border-t.border-brand-200.pt-2.font-bold.text-ink
+                span Total
+                span(data-detalle-total)
+
+            if usuario
+              button.btn-primary.w-full(type="submit")
+                i(data-lucide="calendar-check" style="width:18px;height:18px")
+                | Reservar ahora
+            else
+              a.btn-primary.w-full(href=`/login?mensaje=Inicia sesión para reservar.&tipo=info`)
+                | Inicia sesión para reservar
+            p.text-center.text-xs.text-ink-muted(data-reserva-msg) No se te cobrará nada todavía.
+
+  block scripts
+    script.
+      window.__OCUPADAS__ = !{JSON.stringify(ocupadas || [])};
+    script(src="/js/booking.js")

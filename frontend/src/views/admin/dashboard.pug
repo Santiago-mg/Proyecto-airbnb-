@@ -1,0 +1,63 @@
+extends _layout
+
+block panel
+  -
+    var t = (metricas && metricas.tarjetas) || {};
+    var tarjetas = [
+      { icon: 'users', label: 'Usuarios', valor: t.totalUsuarios || 0, sub: (t.totalAnfitriones||0) + ' anfitriones', color: 'from-brand-500 to-brand-700' },
+      { icon: 'building-2', label: 'Propiedades', valor: t.totalPropiedades || 0, sub: (t.propiedadesPendientes||0) + ' pendientes', color: 'from-sky-500 to-sky-700' },
+      { icon: 'calendar-check', label: 'Reservas', valor: t.totalReservas || 0, sub: (t.totalResenas||0) + ' reseñas', color: 'from-coral-400 to-coral-600' },
+      { icon: 'wallet', label: 'Ingresos totales', valor: helpers.formatearPrecio(t.ingresos || 0), sub: 'acumulado', color: 'from-emerald-500 to-emerald-700' }
+    ];
+
+  .grid.gap-4(class="sm:grid-cols-2 xl:grid-cols-4")
+    each c in tarjetas
+      .relative.overflow-hidden.rounded-3xl.bg-gradient-to-br.p-5.text-white.shadow-card(class=c.color)
+        i.absolute.-right-2.-top-2.opacity-20(data-lucide=c.icon style="width:80px;height:80px")
+        i(data-lucide=c.icon style="width:24px;height:24px")
+        p.mt-4.font-display.text-2xl.font-bold= c.valor
+        p.text-sm.font-medium(class="text-white/90")= c.label
+        p.mt-1.text-xs(class="text-white/70")= c.sub
+
+  .mt-6.flex.flex-wrap.gap-3
+    a.btn-primary(href="/admin/propiedades?estado=pendiente")
+      i(data-lucide="clipboard-check" style="width:18px;height:18px")
+      | Revisar pendientes (#{t.propiedadesPendientes || 0})
+    a.btn-ghost(href="/api/admin/exportar/reservas")
+      i(data-lucide="download" style="width:18px;height:18px")
+      | Exportar reservas (CSV)
+
+  .mt-6.grid.gap-6(class="lg:grid-cols-3")
+    .card.p-6(class="lg:col-span-2")
+      .mb-4.flex.items-center.justify-between
+        h2.font-display.text-lg.font-bold.text-ink Reservas e ingresos por mes
+        span.badge.badge-info Últimos meses
+      canvas#chartReservas(height="120")
+    .card.p-6
+      h2.mb-4.font-display.text-lg.font-bold.text-ink Propiedades por categoría
+      canvas#chartCategorias(height="200")
+
+  .mt-6.card.p-6
+    h2.mb-4.font-display.text-lg.font-bold.text-ink Top propiedades por reservas
+    if metricas.topPropiedades && metricas.topPropiedades.length
+      .overflow-x-auto
+        table.w-full.text-left.text-sm
+          thead.text-xs.font-bold.uppercase.tracking-wide.text-ink-muted
+            tr
+              th.pb-3 Propiedad
+              th.pb-3 Ciudad
+              th.pb-3.text-right Reservas
+              th.pb-3.text-right Ingresos
+          tbody.divide-y.divide-slate-100
+            each p in metricas.topPropiedades
+              tr
+                td.py-3.font-semibold.text-ink= p.titulo
+                td.py-3.text-ink-muted= p.ciudad
+                td.py-3.text-right.font-bold.text-brand-700= p.reservas
+                td.py-3.text-right.font-bold.text-ink= helpers.formatearPrecio(p.ingresos)
+    else
+      p.text-sm.text-ink-muted Aún no hay datos de reservas suficientes.
+
+  block scripts
+    script.
+      window.__METRICAS__ = !{JSON.stringify(metricas || {})};

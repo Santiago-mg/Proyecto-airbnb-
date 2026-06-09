@@ -1,0 +1,50 @@
+﻿extends _layout
+
+block panel
+  .grid.gap-6(class="lg:grid-cols-[1fr_1.4fr]")
+    //- Crear anuncio
+    .card.h-max.p-6
+      h2.font-display.text-lg.font-bold.text-ink Nuevo anuncio
+      p.mt-1.text-sm.text-ink-muted Se mostrará como banner en todo el sitio.
+      form.mt-4.space-y-4(data-admin-form data-api="/admin/anuncios" data-method="POST" data-reload)
+        div
+          label.label(for="titulo") Título
+          input#titulo.field(type="text" name="titulo" placeholder="¡Oferta especial!" required)
+        div
+          label.label(for="mensaje") Mensaje
+          textarea#mensaje.field(name="mensaje" rows="3" placeholder="Descripción del anuncio..." required)
+        div
+          label.label(for="tipo") Tipo
+          select#tipo.field(name="tipo")
+            each o in [{v:'promo',l:'Promoción'},{v:'info',l:'Información'},{v:'success',l:'Éxito'},{v:'warning',l:'Advertencia'}]
+              option(value=o.v)= o.l
+        button.btn-primary.w-full(type="submit")
+          i(data-lucide="megaphone" style="width:18px;height:18px")
+          | Publicar anuncio
+
+    //- Lista
+    .space-y-3
+      if anuncios.length
+        each a in anuncios
+          -
+            var colores = { promo: 'border-coral-200 bg-coral-50', success: 'border-emerald-200 bg-emerald-50', warning: 'border-amber-200 bg-amber-50', info: 'border-brand-200 bg-brand-50' };
+          .rounded-3xl.border.p-5(class=colores[a.tipo])
+            .flex.items-start.justify-between.gap-3
+              div
+                .flex.items-center.gap-2
+                  h3.font-display.font-bold.text-ink= a.titulo
+                  if a.activo
+                    span.badge.badge-success Activo
+                  else
+                    span.badge.badge-muted Inactivo
+                p.mt-1.text-sm.text-ink-soft= a.mensaje
+              span.badge.badge-info= a.tipo
+            .mt-4.flex.gap-2
+              button.btn-ghost.bg-white.py-2.text-xs(data-admin-action data-reload data-api=`/admin/anuncios/${a.id}` data-method="PATCH")= a.activo ? 'Desactivar' : 'Activar'
+              button.btn-ghost.bg-white.py-2.text-xs.text-rose-600(class="hover:border-rose-300" data-admin-action data-reload data-confirm="¿Eliminar anuncio?" data-api=`/admin/anuncios/${a.id}` data-method="DELETE")
+                i(data-lucide="trash-2" style="width:14px;height:14px")
+                | Eliminar
+      else
+        .card.flex.flex-col.items-center.gap-3.p-12.text-center
+          i(data-lucide="megaphone" class="text-brand-400" style="width:40px;height:40px")
+          p.text-ink-muted No hay anuncios publicados.

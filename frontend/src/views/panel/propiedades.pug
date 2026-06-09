@@ -1,0 +1,77 @@
+extends _layout
+
+block panel
+  .flex.flex-wrap.items-center.justify-between.gap-4
+    div
+      h1.font-display.text-3xl.font-bold.text-ink Mis propiedades
+      p.mt-1.text-ink-muted Administra tus espacios publicados.
+    a.btn-primary(href="/panel/propiedades/nueva")
+      i(data-lucide="plus" style="width:18px;height:18px")
+      | Nueva propiedad
+
+  if propiedades.length
+    .mt-6.grid.gap-4(class="sm:grid-cols-2")
+      each p in propiedades
+        -
+          var estados = { aprobada: 'badge-success', pendiente: 'badge-warning', rechazada: 'badge-danger' };
+          var portada = (p.imagenes && p.imagenes.length) ? p.imagenes[0] : 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80';
+        .card.overflow-hidden
+          .relative.aspect-video.overflow-hidden
+            img.h-full.w-full.object-cover(src=portada alt=p.titulo)
+            span.absolute.left-3.top-3.badge(class=estados[p.estado])= p.estado
+            if p.destacada
+              span.absolute.right-3.top-3.badge.bg-white.text-brand-800
+                i(data-lucide="sparkles" style="width:12px;height:12px")
+                | Destacada
+          .p-5
+            h3.font-display.text-lg.font-bold.text-ink= p.titulo
+            p.text-sm.text-ink-muted= `${p.ciudad}, ${p.pais}`
+            .mt-3.flex.items-center.justify-between
+              span.font-display.text-lg.font-bold.text-ink= helpers.formatearPrecio(p.precioNoche)
+              .flex.items-center.gap-3.text-sm.text-ink-muted
+                span.flex.items-center.gap-1
+                  i(data-lucide="eye" style="width:14px;height:14px")
+                  = p.vistas
+                if p.rating
+                  span.flex.items-center.gap-1
+                    i(data-lucide="star" class="fill-amber-400 text-amber-400" style="width:14px;height:14px")
+                    = Number(p.rating).toFixed(1)
+            .mt-4.flex.gap-2
+              a.btn-ghost.flex-1.py-2(href=`/propiedades/${p.id}`)
+                i(data-lucide="external-link" style="width:15px;height:15px")
+                | Ver
+              a.btn-soft.flex-1.py-2(href=`/panel/propiedades/${p.id}/editar`)
+                i(data-lucide="pencil" style="width:15px;height:15px")
+                | Editar
+              button.btn-ghost.py-2.text-rose-600.js-eliminar-prop(class="hover:border-rose-300" data-id=p.id aria-label="Eliminar")
+                i(data-lucide="trash-2" style="width:15px;height:15px")
+  else
+    .card.mt-6.flex.flex-col.items-center.gap-3.p-12.text-center
+      i(data-lucide="building" class="text-brand-400" style="width:44px;height:44px")
+      h3.font-display.text-xl.font-bold.text-ink Aún no tienes propiedades
+      p.text-ink-muted Publica tu primer espacio y empieza a recibir huéspedes.
+      a.btn-primary(href="/panel/propiedades/nueva") Publicar propiedad
+
+  //- Reservas recibidas
+  if recibidas && recibidas.length
+    .mt-12
+      h2.font-display.text-2xl.font-bold.text-ink Reservas recibidas
+      .mt-4.overflow-hidden.rounded-3xl.border.border-brand-100.bg-white
+        table.w-full.text-left.text-sm
+          thead.bg-brand-50.text-xs.font-bold.uppercase.tracking-wide.text-ink-muted
+            tr
+              th.px-5.py-3 Propiedad
+              th.px-5.py-3 Huésped
+              th.px-5.py-3 Fechas
+              th.px-5.py-3 Total
+              th.px-5.py-3 Estado
+          tbody.divide-y.divide-slate-100
+            each r in recibidas
+              -
+                var estados = { confirmada: 'badge-success', pendiente: 'badge-warning', cancelada: 'badge-danger', completada: 'badge-info' };
+              tr(class="hover:bg-brand-50/50")
+                td.px-5.py-3.font-semibold.text-ink= r.propiedad ? r.propiedad.titulo : '—'
+                td.px-5.py-3.text-ink-soft= r.viajero ? r.viajero.nombre : '—'
+                td.px-5.py-3.text-ink-muted #{helpers.formatearFecha(r.fechaInicio)} → #{helpers.formatearFecha(r.fechaFin)}
+                td.px-5.py-3.font-bold.text-ink= helpers.formatearPrecio(r.total)
+                td.px-5.py-3: span.badge(class=estados[r.estado])= r.estado

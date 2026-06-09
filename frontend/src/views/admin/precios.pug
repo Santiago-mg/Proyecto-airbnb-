@@ -1,0 +1,39 @@
+extends _layout
+
+block panel
+  .mb-6.flex.items-center.gap-3.rounded-3xl.border.border-brand-200.bg-brand-50.p-5
+    span.flex.h-11.w-11.shrink-0.items-center.justify-center.rounded-2xl.bg-brand-700.text-white
+      i(data-lucide="sparkles" style="width:22px;height:22px")
+    div
+      h2.font-display.font-bold.text-ink Motor de precios dinámicos
+      p.text-sm.text-ink-soft Comparamos cada propiedad con el promedio de su ciudad y sugerimos un precio óptimo de mercado.
+
+  if sugerencias.length
+    .card.overflow-hidden
+      .overflow-x-auto
+        table.w-full.text-left.text-sm
+          thead.bg-slate-50.text-xs.font-bold.uppercase.tracking-wide.text-ink-muted
+            tr
+              th.px-5.py-3 Propiedad
+              th.px-5.py-3 Ciudad
+              th.px-5.py-3.text-right Precio actual
+              th.px-5.py-3.text-right Promedio ciudad
+              th.px-5.py-3.text-center Posición
+              th.px-5.py-3.text-right Sugerido
+              th.px-5.py-3 Recomendación
+          tbody.divide-y.divide-slate-100
+            each s in sugerencias
+              -
+                var pos = s.diferencia > 10 ? { c: 'badge-danger', t: '+' + s.diferencia + '%' } : (s.diferencia < -10 ? { c: 'badge-success', t: s.diferencia + '%' } : { c: 'badge-muted', t: 'En mercado' });
+              tr(class="hover:bg-slate-50")
+                td.px-5.py-3.font-semibold.text-ink= s.titulo
+                td.px-5.py-3.text-ink-muted= s.ciudad
+                td.px-5.py-3.text-right.font-bold.text-ink= helpers.formatearPrecio(s.precioActual)
+                td.px-5.py-3.text-right.text-ink-soft= helpers.formatearPrecio(s.promedioCiudad)
+                td.px-5.py-3.text-center: span.badge(class=pos.c)= pos.t
+                td.px-5.py-3.text-right.font-bold.text-brand-700= helpers.formatearPrecio(s.sugerido)
+                td.px-5.py-3.text-xs.text-ink-muted= s.recomendacion
+  else
+    .card.flex.flex-col.items-center.gap-3.p-12.text-center
+      i(data-lucide="trending-up" class="text-brand-400" style="width:40px;height:40px")
+      p.text-ink-muted No hay propiedades aprobadas para analizar todavía.

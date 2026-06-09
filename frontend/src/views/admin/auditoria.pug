@@ -1,0 +1,26 @@
+extends _layout
+
+block panel
+  .card.p-6
+    .mb-4.flex.items-center.justify-between
+      h2.font-display.text-lg.font-bold.text-ink Actividad reciente
+      span.badge.badge-info #{registros.length} eventos
+    if registros.length
+      ol.relative.space-y-5.border-l.border-slate-200.pl-6
+        each reg in registros
+          li.relative
+            span.absolute.flex.h-6.w-6.items-center.justify-center.rounded-full.bg-brand-700.text-white(class="-left-[31px]")
+              i(data-lucide="activity" style="width:12px;height:12px")
+            .flex.flex-wrap.items-center.justify-between.gap-2
+              p.font-semibold.text-ink= reg.accion
+              span.text-xs.text-ink-muted= helpers.formatearFecha(reg.createdAt)
+            if reg.detalle
+              p.text-sm.text-ink-soft= reg.detalle
+            p.text-xs.text-ink-muted
+              | por #{reg.adminNombre || 'sistema'}
+              if reg.entidad
+                span.ml-1.badge.badge-muted #{reg.entidad}##{reg.entidadId}
+    else
+      .flex.flex-col.items-center.gap-3.py-12.text-center
+        i(data-lucide="scroll-text" class="text-brand-400" style="width:40px;height:40px")
+        p.text-ink-muted Aún no se registran acciones administrativas.

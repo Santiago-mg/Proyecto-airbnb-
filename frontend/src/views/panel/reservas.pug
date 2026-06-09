@@ -1,0 +1,36 @@
+extends _layout
+
+block panel
+  h1.font-display.text-3xl.font-bold.text-ink Mis reservas
+  p.mt-1.text-ink-muted Gestiona tus estadías reservadas.
+
+  if reservas.length
+    .mt-6.space-y-3
+      each r in reservas
+        -
+          var estados = { confirmada: 'badge-success', pendiente: 'badge-warning', cancelada: 'badge-danger', completada: 'badge-info' };
+        .card.flex.flex-wrap.items-center.justify-between.gap-4.p-4
+          .flex.items-center.gap-4
+            .h-16.w-16.shrink-0.overflow-hidden.rounded-2xl.bg-brand-100
+              if r.propiedad && r.propiedad.imagenes && r.propiedad.imagenes.length
+                img.h-full.w-full.object-cover(src=r.propiedad.imagenes[0] alt="")
+            div
+              a.font-bold.text-ink.link-underline(href=`/propiedades/${r.propiedadId}`)= r.propiedad ? r.propiedad.titulo : 'Propiedad'
+              p.text-sm.text-ink-muted
+                i.inline(data-lucide="calendar" style="width:13px;height:13px")
+                |  #{helpers.formatearFecha(r.fechaInicio)} → #{helpers.formatearFecha(r.fechaFin)}
+              p.text-sm.text-ink-muted #{r.noches} noches · #{r.huespedes} huéspedes
+          .flex.items-center.gap-4
+            .text-right
+              span.badge(class=estados[r.estado])= r.estado
+              p.mt-1.font-display.text-lg.font-bold.text-ink= helpers.formatearPrecio(r.total)
+            if r.estado === 'confirmada' || r.estado === 'pendiente'
+              button.btn-ghost.text-rose-600.js-cancelar(class="hover:border-rose-300" data-id=r.id)
+                i(data-lucide="x" style="width:16px;height:16px")
+                | Cancelar
+  else
+    .card.mt-6.flex.flex-col.items-center.gap-3.p-12.text-center
+      i(data-lucide="calendar-x" class="text-brand-400" style="width:44px;height:44px")
+      h3.font-display.text-xl.font-bold.text-ink Sin reservas todavía
+      p.text-ink-muted Cuando reserves una estadía aparecerá aquí.
+      a.btn-primary(href="/") Explorar estadías

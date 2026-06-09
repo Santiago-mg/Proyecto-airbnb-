@@ -1,0 +1,59 @@
+extends _layout
+include ../partials/mixins
+
+block panel
+  -
+    var esAnfitrion = usuario.rol === 'anfitrion' || usuario.rol === 'admin';
+    var activas = reservas.filter(function(r){ return r.estado === 'confirmada'; }).length;
+    var tarjetas = [
+      { icon: 'calendar-check', label: 'Mis reservas', valor: reservas.length, color: 'bg-brand-100 text-brand-700' },
+      { icon: 'heart', label: 'Favoritos', valor: favoritos.length, color: 'bg-coral-100 text-coral-600' },
+      { icon: 'check-circle', label: 'Reservas activas', valor: activas, color: 'bg-emerald-100 text-emerald-700' }
+    ];
+    if (esAnfitrion) tarjetas.push({ icon: 'wallet', label: 'Ingresos recibidos', valor: helpers.formatearPrecio(ingresos), color: 'bg-amber-100 text-amber-700' });
+
+  .mb-8
+    h1.font-display.text-3xl.font-bold.text-ink ¡Hola, #{usuario.nombre.split(' ')[0]}!
+    p.mt-1.text-ink-muted Este es el resumen de tu actividad en EstadiaPro.
+
+  .grid.gap-4(class="sm:grid-cols-2 xl:grid-cols-4")
+    each t in tarjetas
+      .card.p-5
+        span.flex.h-11.w-11.items-center.justify-center.rounded-2xl(class=t.color)
+          i(data-lucide=t.icon style="width:22px;height:22px")
+        p.mt-4.font-display.text-2xl.font-bold.text-ink= t.valor
+        p.text-sm.text-ink-muted= t.label
+
+  if esAnfitrion
+    .mt-6.flex.flex-wrap.gap-3
+      a.btn-primary(href="/panel/propiedades/nueva")
+        i(data-lucide="plus" style="width:18px;height:18px")
+        | Publicar nueva propiedad
+      a.btn-ghost(href="/panel/propiedades") Gestionar propiedades
+
+  //- Próximas reservas
+  .mt-10
+    .mb-4.flex.items-center.justify-between
+      h2.font-display.text-xl.font-bold.text-ink Próximas reservas
+      a.text-sm.font-semibold.text-brand-700.link-underline(href="/panel/reservas") Ver todas
+    if reservas.length
+      .space-y-3
+        each r in reservas.slice(0,4)
+          .card.flex.flex-wrap.items-center.justify-between.gap-4.p-4
+            .flex.items-center.gap-4
+              .h-14.w-14.shrink-0.overflow-hidden.rounded-2xl.bg-brand-100
+                if r.propiedad && r.propiedad.imagenes && r.propiedad.imagenes.length
+                  img.h-full.w-full.object-cover(src=r.propiedad.imagenes[0] alt="")
+              div
+                p.font-bold.text-ink= r.propiedad ? r.propiedad.titulo : 'Propiedad'
+                p.text-sm.text-ink-muted #{helpers.formatearFecha(r.fechaInicio)} → #{helpers.formatearFecha(r.fechaFin)} · #{r.noches} noches
+            .flex.items-center.gap-3
+              -
+                var estados = { confirmada: 'badge-success', pendiente: 'badge-warning', cancelada: 'badge-danger', completada: 'badge-info' };
+              span.badge(class=estados[r.estado])= r.estado
+              span.font-display.font-bold.text-ink= helpers.formatearPrecio(r.total)
+    else
+      .card.flex.flex-col.items-center.gap-3.p-10.text-center
+        i(data-lucide="calendar-x" class="text-brand-400" style="width:40px;height:40px")
+        p.text-ink-muted Todavía no tienes reservas.
+        a.btn-primary(href="/") Explorar estadías

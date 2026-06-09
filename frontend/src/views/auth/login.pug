@@ -1,0 +1,54 @@
+extends ../layout/base
+include ../partials/alert
+
+block contenido
+  section.container-app.py-12
+    .mx-auto.grid.max-w-5xl.overflow-hidden.rounded-4xl.shadow-float(class="lg:grid-cols-2")
+      //- Panel visual
+      .relative.hidden.aurora-bg.p-12(class="lg:block")
+        .relative.z-10.flex.h-full.flex-col.justify-between.text-white
+          a.flex.items-center.gap-2.font-display.text-2xl.font-bold(href="/")
+            i(data-lucide="tent" style="width:24px;height:24px")
+            | EstadiaPro
+          div
+            h2.font-display.text-4xl.font-bold.leading-tight Bienvenido de nuevo a tu próxima aventura.
+            p.mt-4.text-brand-100(class="text-white/90") Accede a tus reservas, favoritos y propiedades en un solo lugar.
+          .flex.items-center.gap-3.text-sm
+            i(data-lucide="shield-check" style="width:20px;height:20px")
+            | Tus datos están protegidos.
+
+      //- Formulario
+      .bg-white.p-8(class="sm:p-12")
+        h1.font-display.text-3xl.font-bold.text-ink Inicia sesión
+        p.mt-2.text-sm.text-ink-muted ¿No tienes cuenta?
+          a.ml-1.font-semibold.text-brand-700.link-underline(href="/registro") Créala gratis
+
+        if alert
+          .mt-6
+            +alert(alert)
+        if errores
+          .mt-6
+            +errores(errores)
+
+        form.mt-6.space-y-4(method="POST" action="/login")
+          div
+            label.label(for="email") Correo electrónico
+            input#email.field(type="email" name="email" placeholder="tucorreo@ejemplo.com" value=(valores && valores.email) required)
+          div
+            label.label(for="password") Contraseña
+            .relative
+              input#password.field.pr-12(type="password" name="password" placeholder="••••••••" required)
+              button.absolute.right-3.top-1_2.-translate-y-1_2.text-ink-muted(class="top-1/2 -translate-y-1/2" type="button" data-toggle-password="#password" aria-label="Mostrar contraseña")
+                i(data-lucide="eye" style="width:18px;height:18px")
+          .flex.items-center.justify-between.text-sm
+            label.flex.items-center.gap-2.text-ink-muted
+              input.rounded.border-slate-300(type="checkbox")
+              | Recuérdame
+            a.font-semibold.text-brand-700.link-underline(href="/olvide-password") ¿Olvidaste tu contraseña?
+          button.btn-primary.w-full(type="submit") Iniciar sesión
+
+        .mt-6.rounded-2xl.bg-brand-50.p-4.text-xs.text-ink-muted
+          p.font-semibold.text-ink-soft Cuentas de prueba:
+          p.mt-1 Admin: admin@estadiapro.com / admin123
+          p Anfitrión: valentina@estadiapro.com / anfitrion123
+          p Viajero: camila@estadiapro.com / viajero123
