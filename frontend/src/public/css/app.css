@@ -963,6 +963,9 @@ h1, h2, h3, h4{
 .z-40{
   z-index: 40;
 }
+.z-50{
+  z-index: 50;
+}
 .z-\[100\]{
   z-index: 100;
 }
@@ -1049,11 +1052,11 @@ h1, h2, h3, h4{
 .hidden{
   display: none;
 }
-.aspect-\[16\/9\]{
-  aspect-ratio: 16/9;
-}
 .aspect-\[4\/3\]{
   aspect-ratio: 4/3;
+}
+.aspect-video{
+  aspect-ratio: 16 / 9;
 }
 .h-10{
   height: 2.5rem;
@@ -1177,6 +1180,9 @@ h1, h2, h3, h4{
 .flex-1{
   flex: 1 1 0%;
 }
+.flex-shrink-0{
+  flex-shrink: 0;
+}
 .shrink-0{
   flex-shrink: 0;
 }
@@ -1237,9 +1243,6 @@ h1, h2, h3, h4{
 }
 .justify-between{
   justify-content: space-between;
-}
-.gap-0{
-  gap: 0px;
 }
 .gap-1{
   gap: 0.25rem;
@@ -1661,6 +1664,9 @@ h1, h2, h3, h4{
 .pr-12{
   padding-right: 3rem;
 }
+.pr-2{
+  padding-right: 0.5rem;
+}
 .pr-3{
   padding-right: 0.75rem;
 }
@@ -1773,6 +1779,10 @@ h1, h2, h3, h4{
 .text-brand-50{
   --tw-text-opacity: 1;
   color: rgb(240 253 250 / var(--tw-text-opacity, 1));
+}
+.text-brand-500{
+  --tw-text-opacity: 1;
+  color: rgb(20 184 166 / var(--tw-text-opacity, 1));
 }
 .text-brand-600{
   --tw-text-opacity: 1;
@@ -1985,6 +1995,16 @@ h1, h2, h3, h4{
 .hover\:text-white:hover{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.focus\:bg-brand-50:focus{
+  --tw-bg-opacity: 1;
+  background-color: rgb(240 253 250 / var(--tw-bg-opacity, 1));
+}
+
+.focus\:outline-none:focus{
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 
 .focus\:ring-0:focus{

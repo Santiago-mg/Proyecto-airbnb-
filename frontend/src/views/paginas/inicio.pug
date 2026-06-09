@@ -23,11 +23,13 @@ block contenido
       //- Buscador
       form.relative.mt-10.animate-fade-up(action="/" method="GET")
         .grid.gap-3.rounded-4xl.bg-white.p-3.shadow-float(class="md:grid-cols-[1.4fr_1fr_0.8fr_auto]")
-          label.flex.items-center.gap-3.rounded-3xl.px-4.py-3(class="hover:bg-brand-50")
+          .relative.flex.items-center.gap-3.rounded-3xl.px-4.py-3(class="hover:bg-brand-50" data-autocomplete-wrap)
             i(data-lucide="map-pin" class="text-brand-600" style="width:20px;height:20px")
             span.flex-1
               span.block.text-xs.font-bold.uppercase.tracking-wide.text-ink-muted Destino
-              input.w-full.border-0.bg-transparent.p-0.text-sm.font-medium.text-ink.outline-none(class="focus:ring-0" type="text" name="q" placeholder="¿A dónde vas?" value=(filtros.q || ''))
+              input.w-full.border-0.bg-transparent.p-0.text-sm.font-medium.text-ink.outline-none(class="focus:ring-0" type="text" name="q" placeholder="¿A dónde vas?" value=(filtros.q || '') autocomplete="off" data-autocomplete)
+            //- Dropdown de sugerencias (poblado por JS)
+            .absolute.left-0.right-0.z-50.hidden.overflow-hidden.rounded-2xl.border.border-slate-100.bg-white.shadow-float(style="top:calc(100% + 4px)" data-autocomplete-list)
           label.flex.items-center.gap-3.rounded-3xl.px-4.py-3(class="hover:bg-brand-50")
             i(data-lucide="layers" class="text-brand-600" style="width:20px;height:20px")
             span.flex-1

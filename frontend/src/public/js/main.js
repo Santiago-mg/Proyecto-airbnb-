@@ -101,6 +101,78 @@
     });
   });
 
+  // ---- Autocomplete de destino ----
+  (function initAutoComplete() {
+    const input = document.querySelector('[data-autocomplete]');
+    const lista = document.querySelector('[data-autocomplete-list]');
+    if (!input || !lista) return;
+
+    let timer = null;
+
+    function cerrar() {
+      lista.classList.add('hidden');
+      lista.innerHTML = '';
+    }
+
+    function renderSugerencias(ciudades) {
+      if (!ciudades.length) { cerrar(); return; }
+      lista.innerHTML = ciudades.map((c) => `
+        <button type="button"
+          class="w-full flex items-center gap-3 px-5 py-3 text-sm font-medium text-left text-ink-soft transition hover:bg-brand-50 focus:bg-brand-50 focus:outline-none"
+          data-ciudad="${c}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="text-brand-500 flex-shrink-0">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          <span>${c}</span>
+        </button>
+      `).join('');
+      lista.classList.remove('hidden');
+
+      lista.querySelectorAll('[data-ciudad]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          input.value = btn.getAttribute('data-ciudad');
+          cerrar();
+          input.closest('form').submit();
+        });
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') { btn.click(); }
+        });
+      });
+    }
+
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      const q = input.value.trim();
+      if (q.length < 2) { cerrar(); return; }
+
+      timer = setTimeout(async () => {
+        try {
+          const { data } = await api(`/public/sugerencias?q=${encodeURIComponent(q)}`);
+          if (data?.ok) renderSugerencias(data.ciudades || []);
+        } catch (e) {
+          cerrar();
+        }
+      }, 220);
+    });
+
+    // Cerrar al hacer click fuera
+    document.addEventListener('click', (e) => {
+      if (!lista.contains(e.target) && e.target !== input) cerrar();
+    });
+
+    // Navegar con teclado
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { cerrar(); return; }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const primero = lista.querySelector('[data-ciudad]');
+        if (primero) primero.focus();
+      }
+    });
+  }());
+
   // ---- Publicar reseña ----
   document.querySelectorAll('.js-resena').forEach((form) => {
     form.addEventListener('submit', async (e) => {
