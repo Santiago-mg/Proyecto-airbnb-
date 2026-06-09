@@ -26,10 +26,29 @@ const asegurarBaseDeDatos = async () => {
   }
 };
 
+const esperar = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
+
+// Reintenta la conexion: MySQL puede tardar en aceptar conexiones TCP aunque
+// el contenedor ya este "healthy", sobre todo en el primer arranque.
+const conectarConReintentos = async (intentos = 10, espera = 3000) => {
+  for (let i = 1; i <= intentos; i += 1) {
+    try {
+      await asegurarBaseDeDatos();
+      await db.authenticate();
+      return;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(`Esperando a la base de datos (intento ${i}/${intentos})...`);
+      if (i === intentos) throw error;
+      // eslint-disable-next-line no-await-in-loop
+      await esperar(espera);
+    }
+  }
+};
+
 const iniciar = async () => {
   try {
-    await asegurarBaseDeDatos();
-    await db.authenticate();
+    await conectarConReintentos();
     await db.sync({ alter: true });
     await ejecutarSeed();
 
