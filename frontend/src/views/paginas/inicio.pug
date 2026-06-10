@@ -3,6 +3,19 @@ include ../partials/mixins
 include ../partials/alert
 
 block contenido
+  //- AVISO DESTACADO DE NOTIFICACIONES NUEVAS
+  if notifNoLeidas && notifNoLeidas > 0
+    .container-app.mt-6
+      a.group.flex.items-center.gap-4.rounded-3xl.border.border-coral-200.p-5.shadow-soft.transition.animate-fade-up(href="/panel/reservas" class="bg-coral-50 hover:shadow-card")
+        span.flex.flex-shrink-0.items-center.justify-center.rounded-2xl.bg-coral-500.text-white(class="animate-pulse" style="width:48px;height:48px")
+          i(data-lucide="bell-ring" style="width:24px;height:24px")
+        span.min-w-0.flex-1
+          p.font-display.text-lg.font-bold.text-ink ¡Tienes #{notifNoLeidas} notificación#{notifNoLeidas > 1 ? 'es' : ''} nueva#{notifNoLeidas > 1 ? 's' : ''}!
+          p.truncate.text-sm.text-ink-soft= notificaciones && notificaciones[0] ? notificaciones[0].mensaje : 'Revisa la actividad reciente de tus propiedades.'
+        span.hidden.items-center.gap-1.text-sm.font-semibold.text-coral-600(class="sm:flex")
+          | Ver reservas
+          i(data-lucide="arrow-right" style="width:16px;height:16px")
+
   //- HERO
   section.relative.overflow-hidden
     .aurora-bg.absolute.inset-0

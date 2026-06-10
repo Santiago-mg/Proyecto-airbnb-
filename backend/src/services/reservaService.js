@@ -2,6 +2,15 @@ import { Op } from 'sequelize';
 
 import { Reserva, Propiedad, Usuario } from '../models/index.js';
 import { crearError } from '../helpers/errors.js';
+import { crearNotificacion } from './notificacionService.js';
+
+const formatoFecha = (valor) => {
+  try {
+    return new Date(valor).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' });
+  } catch (error) {
+    return valor;
+  }
+};
 
 const calcularNoches = (inicio, fin) => {
   const ms = new Date(fin).getTime() - new Date(inicio).getTime();
@@ -59,6 +68,23 @@ const crearReserva = async (viajeroId, { propiedadId, fechaInicio, fechaFin, hue
     total,
     estado: 'confirmada',
   });
+
+  // Notifica al anfitrion de la nueva reserva. Si algo falla aqui,
+  // la reserva ya quedo creada y no debe verse afectada.
+  try {
+    const viajero = await Usuario.findByPk(viajeroId, { attributes: ['nombre'] });
+    const nombreViajero = viajero?.nombre || 'Un huesped';
+    await crearNotificacion({
+      usuarioId: propiedad.anfitrionId,
+      tipo: 'reserva',
+      titulo: 'Nueva reserva recibida',
+      mensaje: `${nombreViajero} reservo "${propiedad.titulo}" (${formatoFecha(fechaInicio)} - ${formatoFecha(fechaFin)}, ${noches} ${noches === 1 ? 'noche' : 'noches'}).`,
+      enlace: '/panel/reservas',
+    });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('No se pudo crear la notificacion de reserva:', error.message);
+  }
 
   return reserva;
 };

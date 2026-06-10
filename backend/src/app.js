@@ -7,6 +7,7 @@ import propiedadRoutes from './routes/propiedadRoutes.js';
 import reservaRoutes from './routes/reservaRoutes.js';
 import resenaRoutes from './routes/resenaRoutes.js';
 import favoritoRoutes from './routes/favoritoRoutes.js';
+import notificacionRoutes from './routes/notificacionRoutes.js';
 import publicRoutes from './routes/publicRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import { notFoundHandler } from './middlewares/notFound.js';
@@ -29,6 +30,7 @@ app.use('/api/propiedades', propiedadRoutes);
 app.use('/api/reservas', reservaRoutes);
 app.use('/api/resenas', resenaRoutes);
 app.use('/api/favoritos', favoritoRoutes);
+app.use('/api/notificaciones', notificacionRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/admin', adminRoutes);
 

@@ -1,5 +1,8 @@
 ﻿include mixins
 
+-
+  var iconosNotif = { reserva: 'calendar-check', resena: 'star', sistema: 'info' };
+
 header.sticky.top-0.z-40.border-b.border-brand-100.bg-white_85.backdrop-blur(class="bg-white/85")
   .container-app.flex.h-18.items-center.justify-between.gap-4(style="height:4.5rem")
     a.flex.items-center.gap-2.font-display.text-2xl.font-bold.text-brand-900(href="/")
@@ -19,6 +22,35 @@ header.sticky.top-0.z-40.border-b.border-brand-100.bg-white_85.backdrop-blur(cla
 
     .flex.items-center.gap-3
       if usuario
+        //- Campana de notificaciones
+        .relative(data-menu)
+          button.relative.flex.items-center.justify-center.rounded-full.border.border-brand-100.bg-white.shadow-soft.transition(type="button" data-menu-trigger aria-label="Notificaciones" class="h-11 w-11 hover:shadow-card")
+            i(data-lucide="bell" style="width:18px;height:18px")
+            if notifNoLeidas > 0
+              span.absolute.flex.items-center.justify-center.rounded-full.bg-coral-500.font-bold.text-white(class="-top-1 -right-1 animate-pulse" style="min-width:20px;height:20px;font-size:11px;padding:0 5px")= notifNoLeidas > 9 ? '9+' : notifNoLeidas
+          .absolute.right-0.mt-2.origin-top-right.rounded-3xl.border.border-brand-100.bg-white.p-2.shadow-float.hidden(data-menu-panel class="w-80")
+            .flex.items-center.justify-between.px-3.py-2
+              p.text-sm.font-bold.text-ink Notificaciones
+              if notifNoLeidas > 0
+                button.text-xs.font-semibold.text-brand-700(type="button" data-notif-leer-todas class="hover:underline") Marcar todas
+            .my-1.border-t.border-slate-100
+            if notificaciones && notificaciones.length
+              .flex.flex-col.gap-1.overflow-y-auto(class="max-h-96")
+                each n in notificaciones
+                  a.flex.items-start.gap-3.rounded-2xl.px-3.py-2.transition(href=(n.enlace || '#') data-notif-id=n.id class=(n.leida ? "hover:bg-slate-50" : "bg-brand-50 hover:bg-brand-100"))
+                    span.flex.flex-shrink-0.items-center.justify-center.rounded-full.bg-coral-100.text-coral-600(style="width:36px;height:36px")
+                      i(data-lucide=(iconosNotif[n.tipo] || 'bell') style="width:16px;height:16px")
+                    span.min-w-0.flex-1
+                      p.text-sm.font-bold.text-ink= n.titulo
+                      p.text-xs.text-ink-soft(class="line-clamp-2")= n.mensaje
+                      p.mt-1.text-xs.text-ink-muted= helpers.formatearFecha(n.createdAt)
+                    if !n.leida
+                      span.mt-1.flex-shrink-0.rounded-full.bg-coral-500(style="width:8px;height:8px")
+            else
+              .flex.flex-col.items-center.gap-2.px-4.py-8.text-center
+                i(data-lucide="bell-off" class="text-brand-300" style="width:28px;height:28px")
+                p.text-sm.text-ink-muted Sin notificaciones por ahora.
+        //- Menu de usuario
         .relative(data-menu)
           button.flex.items-center.gap-2.rounded-full.border.border-brand-100.bg-white.py-2.pl-3.pr-2.shadow-soft.transition.hover_shadow-card(type="button" data-menu-trigger)
             i(data-lucide="menu" style="width:18px;height:18px")

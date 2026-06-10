@@ -101,6 +101,27 @@
     });
   });
 
+  // ---- Notificaciones ----
+  (function initNotificaciones() {
+    const btnTodas = document.querySelector('[data-notif-leer-todas]');
+    if (btnTodas) {
+      btnTodas.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        await api('/notificaciones/leer-todas', { method: 'PATCH' });
+        location.reload();
+      });
+    }
+
+    // Al abrir una notificacion, se marca como leida antes de navegar.
+    document.querySelectorAll('[data-notif-id]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const id = el.getAttribute('data-notif-id');
+        if (id) api(`/notificaciones/${id}/leer`, { method: 'PATCH' });
+      });
+    });
+  }());
+
   // ---- Autocomplete de destino ----
   (function initAutoComplete() {
     const input = document.querySelector('[data-autocomplete]');

@@ -6,11 +6,28 @@ const sesion = async (req, res, next) => {
   res.locals.token = req.cookies?.token || null;
   res.locals.rutaActual = req.path;
 
+  res.locals.notificaciones = [];
+  res.locals.notifNoLeidas = 0;
+
   const token = req.cookies?.token;
   if (token) {
     const { data } = await apiFetch('/auth/perfil', { token });
     if (data?.ok) {
       res.locals.usuario = data.usuario;
+    }
+  }
+
+  // Notificaciones del usuario autenticado (campana del navbar + aviso en inicio).
+  if (res.locals.usuario) {
+    try {
+      const { data } = await apiFetch('/notificaciones', { token });
+      if (data?.ok) {
+        res.locals.notificaciones = data.notificaciones || [];
+        res.locals.notifNoLeidas = data.noLeidas || 0;
+      }
+    } catch (error) {
+      res.locals.notificaciones = [];
+      res.locals.notifNoLeidas = 0;
     }
   }
 

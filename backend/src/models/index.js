@@ -7,6 +7,7 @@ import Resena from './Resena.js';
 import Favorito from './Favorito.js';
 import Anuncio from './Anuncio.js';
 import AuditLog from './AuditLog.js';
+import Notificacion from './Notificacion.js';
 
 // Anfitrion (Usuario) <-> Propiedad
 Usuario.hasMany(Propiedad, { foreignKey: 'anfitrionId', as: 'propiedades' });
@@ -34,6 +35,10 @@ Favorito.belongsTo(Usuario, { foreignKey: 'usuarioId', as: 'usuario' });
 Propiedad.hasMany(Favorito, { foreignKey: 'propiedadId', as: 'favoritos' });
 Favorito.belongsTo(Propiedad, { foreignKey: 'propiedadId', as: 'propiedad' });
 
+// Notificaciones
+Usuario.hasMany(Notificacion, { foreignKey: 'usuarioId', as: 'notificaciones' });
+Notificacion.belongsTo(Usuario, { foreignKey: 'usuarioId', as: 'usuario' });
+
 export {
   db,
   Usuario,
@@ -44,4 +49,5 @@ export {
   Favorito,
   Anuncio,
   AuditLog,
+  Notificacion,
 };
