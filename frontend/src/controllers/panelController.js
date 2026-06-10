@@ -60,11 +60,38 @@ const dashboard = async (req, res) => {
 };
 
 const misReservas = async (req, res) => {
-  const { data } = await apiFetch('/reservas/mias', { token: res.locals.token });
+  const { token, usuario } = res.locals;
+  const esAnfitrion = usuario.rol === 'anfitrion' || usuario.rol === 'admin';
+
+  const [miasRes, recibidasRes] = await Promise.all([
+    apiFetch('/reservas/mias', { token }),
+    esAnfitrion ? apiFetch('/reservas/recibidas', { token }) : Promise.resolve({ data: {} }),
+  ]);
+
   res.render('panel/reservas', {
     pagina: 'Mis reservas',
     seccion: 'reservas',
-    reservas: data?.reservas || [],
+    reservas: miasRes.data?.reservas || [],
+    recibidas: recibidasRes.data?.reservas || [],
+    esAnfitrion,
+    alert: alerta(req.query),
+  });
+};
+
+// Panel para que un anfitrion reserve propiedades de otros anfitriones.
+const panelReservar = async (req, res) => {
+  const { token, usuario } = res.locals;
+  const filtros = new URLSearchParams(req.query).toString();
+  const { data } = await apiFetch(`/propiedades${filtros ? `?${filtros}` : ''}`, { token });
+  const todas = data?.propiedades || [];
+  // Excluye las propiedades del propio anfitrion (no puede reservarse a si mismo).
+  const propiedades = todas.filter((p) => !p.anfitrion || p.anfitrion.id !== usuario.id);
+
+  res.render('panel/reservar', {
+    pagina: 'Reservar estadía',
+    seccion: 'reservar',
+    propiedades,
+    filtros: req.query,
     alert: alerta(req.query),
   });
 };
@@ -178,6 +205,6 @@ const actualizarPropiedad = async (req, res) => {
 };
 
 export {
-  dashboard, misReservas, misFavoritos, perfil, actualizarPerfil,
+  dashboard, misReservas, panelReservar, misFavoritos, perfil, actualizarPerfil,
   misPropiedades, formNuevaPropiedad, crearPropiedad, formEditarPropiedad, actualizarPropiedad,
 };

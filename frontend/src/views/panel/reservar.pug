@@ -1,0 +1,56 @@
+extends _layout
+
+block panel
+  .flex.flex-wrap.items-end.justify-between.gap-4
+    div
+      h1.font-display.text-3xl.font-bold.text-ink Reservar estadía
+      p.mt-1.text-ink-muted Explora y reserva propiedades de otros anfitriones.
+    form.flex.items-center.gap-2(action="/panel/reservar" method="GET")
+      input.field.py-2(type="text" name="q" placeholder="Ciudad o nombre..." value=(filtros.q || ''))
+      button.btn-primary.flex-shrink-0(type="submit")
+        i(data-lucide="search" style="width:16px;height:16px")
+        span.hidden(class="sm:inline") Buscar
+
+  if propiedades.length
+    .mt-6.grid.gap-6(class="md:grid-cols-2 xl:grid-cols-3")
+      each p in propiedades
+        -
+          var portada = (p.imagenes && p.imagenes.length) ? p.imagenes[0] : 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1280&q=80';
+        .flex.flex-col.overflow-hidden.rounded-4xl.bg-white.shadow-card.transition(class="hover:shadow-float")
+          .relative.overflow-hidden(style="aspect-ratio:16/10")
+            img.h-full.w-full.object-cover(src=portada alt=p.titulo loading="lazy")
+            span.absolute.left-3.top-3.badge.bg-white.text-brand-800.shadow-soft= (p.categoria && p.categoria.nombre) || 'Estadía'
+          .flex.flex-1.flex-col.p-5
+            h3.font-display.text-lg.font-bold.leading-tight.text-ink= p.titulo
+            p.mt-1.flex.items-center.gap-1.text-sm.text-ink-muted
+              i(data-lucide="map-pin" style="width:14px;height:14px")
+              = `${p.ciudad}, ${p.pais}`
+            p.mt-1.text-xs.text-ink-muted
+              i.inline(data-lucide="user" style="width:12px;height:12px")
+              |  #{p.anfitrion ? p.anfitrion.nombre : 'Anfitrión'} · hasta #{p.huespedes} huéspedes
+            p.mt-2
+              span.font-display.text-xl.font-bold.text-ink= helpers.formatearPrecio(p.precioNoche)
+              span.text-sm.text-ink-muted  / noche
+
+            form.js-quick-book.mt-4.space-y-3.border-t.border-slate-100.pt-4(data-id=p.id data-precio=p.precioNoche)
+              .grid.grid-cols-2.gap-2
+                div
+                  label.label.text-xs(for=`inicio-${p.id}`) Llegada
+                  input.field.py-2(id=`inicio-${p.id}` type="date" name="fechaInicio" required)
+                div
+                  label.label.text-xs(for=`fin-${p.id}`) Salida
+                  input.field.py-2(id=`fin-${p.id}` type="date" name="fechaFin" required)
+              .flex.items-end.gap-2
+                .flex-1
+                  label.label.text-xs(for=`hue-${p.id}`) Huéspedes
+                  input.field.py-2(id=`hue-${p.id}` type="number" name="huespedes" min="1" max=p.huespedes value="1" required)
+                button.btn-primary.flex-shrink-0(type="submit")
+                  i(data-lucide="calendar-plus" style="width:16px;height:16px")
+                  | Reservar
+              p.hidden.text-xs.font-medium.text-rose-600(data-msg)
+  else
+    .card.mt-6.flex.flex-col.items-center.gap-3.p-12.text-center
+      i(data-lucide="search-x" class="text-brand-400" style="width:44px;height:44px")
+      h3.font-display.text-xl.font-bold.text-ink No hay propiedades disponibles
+      p.text-ink-muted Prueba con otra búsqueda o vuelve más tarde.
+      a.btn-ghost(href="/panel/reservar") Ver todas

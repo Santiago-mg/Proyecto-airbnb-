@@ -34,3 +34,38 @@ block panel
       h3.font-display.text-xl.font-bold.text-ink Sin reservas todavía
       p.text-ink-muted Cuando reserves una estadía aparecerá aquí.
       a.btn-primary(href="/") Explorar estadías
+
+  //- Reservas recibidas (solo anfitriones)
+  if esAnfitrion
+    .mt-12
+      .flex.items-center.gap-2
+        i(data-lucide="inbox" class="text-brand-600" style="width:22px;height:22px")
+        h2.font-display.text-2xl.font-bold.text-ink Reservas recibidas
+      p.mt-1.text-ink-muted Reservas que los huéspedes han hecho en tus propiedades.
+
+      if recibidas && recibidas.length
+        .mt-6.space-y-3
+          each r in recibidas
+            -
+              var estadosR = { confirmada: 'badge-success', pendiente: 'badge-warning', cancelada: 'badge-danger', completada: 'badge-info' };
+            .card.flex.flex-wrap.items-center.justify-between.gap-4.p-4
+              .flex.items-center.gap-4
+                +avatar(r.viajero, 44)
+                div
+                  p.font-bold.text-ink= r.viajero ? r.viajero.nombre : 'Huésped'
+                  a.text-sm.font-semibold.text-brand-700.link-underline(href=`/propiedades/${r.propiedadId}`)= r.propiedad ? r.propiedad.titulo : 'Propiedad'
+                  p.mt-1.text-sm.text-ink-muted
+                    i.inline(data-lucide="calendar" style="width:13px;height:13px")
+                    |  #{helpers.formatearFecha(r.fechaInicio)} → #{helpers.formatearFecha(r.fechaFin)} · #{r.noches} noches · #{r.huespedes} huéspedes
+              .flex.items-center.gap-4
+                .text-right
+                  span.badge(class=estadosR[r.estado])= r.estado
+                  p.mt-1.font-display.text-lg.font-bold.text-ink= helpers.formatearPrecio(r.total)
+                if r.estado === 'confirmada' || r.estado === 'pendiente'
+                  button.btn-ghost.text-rose-600.js-cancelar(class="hover:border-rose-300" data-id=r.id)
+                    i(data-lucide="x" style="width:16px;height:16px")
+                    | Cancelar
+      else
+        .card.mt-6.flex.flex-col.items-center.gap-3.p-10.text-center
+          i(data-lucide="inbox" class="text-brand-400" style="width:40px;height:40px")
+          p.text-ink-muted Aún no has recibido reservas en tus propiedades.

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import {
-  dashboard, misReservas, misFavoritos, perfil, actualizarPerfil,
+  dashboard, misReservas, panelReservar, misFavoritos, perfil, actualizarPerfil,
   misPropiedades, formNuevaPropiedad, crearPropiedad, formEditarPropiedad, actualizarPropiedad,
 } from '../controllers/panelController.js';
 import { requiereSesion, requiereRol } from '../middlewares/sesion.js';
@@ -18,6 +18,7 @@ router.post('/perfil', actualizarPerfil);
 
 // Anfitrion
 const soloAnfitrion = requiereRol('anfitrion', 'admin');
+router.get('/reservar', soloAnfitrion, panelReservar);
 router.get('/propiedades', soloAnfitrion, misPropiedades);
 router.get('/propiedades/nueva', soloAnfitrion, formNuevaPropiedad);
 router.post('/propiedades', soloAnfitrion, crearPropiedad);

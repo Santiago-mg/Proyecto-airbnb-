@@ -101,6 +101,52 @@
     });
   });
 
+  // ---- Reserva rapida (panel del anfitrion) ----
+  document.querySelectorAll('.js-quick-book').forEach((form) => {
+    const hoy = new Date().toISOString().split('T')[0];
+    const inicio = form.querySelector('[name=fechaInicio]');
+    const fin = form.querySelector('[name=fechaFin]');
+    const msg = form.querySelector('[data-msg]');
+    if (inicio) inicio.min = hoy;
+    if (fin) fin.min = hoy;
+    if (inicio && fin) {
+      inicio.addEventListener('change', () => { fin.min = inicio.value || hoy; });
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const propiedadId = Number(form.getAttribute('data-id'));
+      const fd = new FormData(form);
+      const fi = fd.get('fechaInicio');
+      const ff = fd.get('fechaFin');
+      const mostrarError = (texto) => {
+        if (msg) { msg.textContent = texto; msg.classList.remove('hidden'); }
+        else toast(texto, 'error');
+      };
+      if (!fi || !ff || new Date(ff) <= new Date(fi)) {
+        mostrarError('Selecciona un rango de fechas válido.');
+        return;
+      }
+      const btn = form.querySelector('button[type=submit]');
+      btn.disabled = true;
+      const { ok, status, data } = await api('/reservas', {
+        method: 'POST',
+        body: {
+          propiedadId, fechaInicio: fi, fechaFin: ff, huespedes: Number(fd.get('huespedes')),
+        },
+      });
+      btn.disabled = false;
+      if (status === 401) { window.location.href = '/login?mensaje=Inicia sesión para reservar.&tipo=info'; return; }
+      if (ok) {
+        if (msg) msg.classList.add('hidden');
+        toast('¡Reserva confirmada!', 'success');
+        setTimeout(() => { window.location.href = '/panel/reservas?mensaje=Tu reserva fue confirmada.&tipo=success'; }, 800);
+      } else {
+        mostrarError((data && data.message) || 'No se pudo completar la reserva.');
+      }
+    });
+  });
+
   // ---- Notificaciones ----
   (function initNotificaciones() {
     const btnTodas = document.querySelector('[data-notif-leer-todas]');

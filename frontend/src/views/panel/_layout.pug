@@ -20,7 +20,10 @@ block contenido
               { href: '/panel/favoritos', sec: 'favoritos', icon: 'heart', label: 'Favoritos' },
               { href: '/panel/perfil', sec: 'perfil', icon: 'user-cog', label: 'Mi perfil' }
             ];
-            if (usuario.rol === 'anfitrion' || usuario.rol === 'admin') items.splice(3, 0, { href: '/panel/propiedades', sec: 'propiedades', icon: 'building-2', label: 'Mis propiedades' });
+            if (usuario.rol === 'anfitrion' || usuario.rol === 'admin') {
+              items.splice(3, 0, { href: '/panel/propiedades', sec: 'propiedades', icon: 'building-2', label: 'Mis propiedades' });
+              items.splice(4, 0, { href: '/panel/reservar', sec: 'reservar', icon: 'calendar-plus', label: 'Reservar estadía' });
+            }
           each it in items
             a.flex.items-center.gap-3.rounded-2xl.px-4.py-2.text-sm.font-semibold.transition(href=it.href class=(seccion === it.sec ? 'bg-brand-900 text-white shadow-soft' : 'text-ink-soft hover:bg-brand-50'))
               i(data-lucide=it.icon style="width:18px;height:18px")
